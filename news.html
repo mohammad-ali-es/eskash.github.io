@@ -1,0 +1,1665 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f6f8fc" />
+  <meta name="description" content="نمونه وبسایت خبری و مجله آنلاین فارسی، تک‌صفحه‌ای، ریسپانسیو و تعاملی." />
+  <title>نبض‌نامه | وبسایت خبری و مجله آنلاین</title>
+
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap");
+
+    :root{
+      --bg:#f6f8fc;
+      --surface:#ffffff;
+      --surface2:#eef3f9;
+      --text:#111827;
+      --muted:#65758b;
+      --line:rgba(17,24,39,.10);
+      --primary:#2563eb;
+      --red:#ef4444;
+      --orange:#f59e0b;
+      --green:#10b981;
+      --purple:#8b5cf6;
+      --shadow:0 22px 65px rgba(17,24,39,.10);
+      --shadow-soft:0 12px 34px rgba(17,24,39,.07);
+      --radius:28px;
+    }
+
+    body.dark{
+      --bg:#08111f;
+      --surface:#111c31;
+      --surface2:#17243a;
+      --text:#f8fbff;
+      --muted:#9aa9bf;
+      --line:rgba(255,255,255,.10);
+      --shadow:0 22px 65px rgba(0,0,0,.32);
+      --shadow-soft:0 12px 34px rgba(0,0,0,.22);
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+
+    body{
+      margin:0;
+      font-family:"Vazirmatn",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 12% 5%, rgba(37,99,235,.14), transparent 30%),
+        radial-gradient(circle at 90% 16%, rgba(239,68,68,.10), transparent 28%),
+        var(--bg);
+      min-height:100vh;
+      overflow-x:hidden;
+      transition:background .25s ease,color .25s ease;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:-2;
+      pointer-events:none;
+      background-image:
+        linear-gradient(rgba(17,24,39,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(17,24,39,.035) 1px, transparent 1px);
+      background-size:52px 52px;
+      mask-image:linear-gradient(to bottom, black, transparent 80%);
+    }
+
+    body.dark::before{
+      background-image:
+        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+    }
+
+    a{color:inherit;text-decoration:none}
+    button,input{font:inherit}
+    img{display:block;max-width:100%}
+    ::selection{background:var(--primary);color:white}
+
+    .container{
+      width:min(1180px, calc(100% - 36px));
+      margin-inline:auto;
+    }
+
+    .topbar{
+      position:sticky;
+      top:14px;
+      z-index:100;
+      margin-top:14px;
+    }
+
+    .nav{
+      position:relative;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      padding:12px 14px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.76);
+      backdrop-filter:blur(18px);
+      box-shadow:var(--shadow-soft);
+    }
+
+    body.dark .nav{
+      background:rgba(17,28,49,.78);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:max-content;
+    }
+
+    .brand-logo{
+      width:44px;
+      height:44px;
+      border-radius:17px;
+      display:grid;
+      place-items:center;
+      color:white;
+      font-weight:900;
+      background:linear-gradient(135deg,var(--red),var(--primary));
+      box-shadow:0 14px 30px rgba(37,99,235,.20);
+    }
+
+    .brand strong{
+      display:block;
+      font-size:1.14rem;
+      letter-spacing:-.5px;
+    }
+
+    .brand small{
+      display:block;
+      color:var(--muted);
+      font-size:.76rem;
+      margin-top:1px;
+    }
+
+    .nav-links{
+      display:flex;
+      align-items:center;
+      gap:4px;
+    }
+
+    .nav-links a{
+      color:var(--muted);
+      padding:9px 13px;
+      border-radius:999px;
+      font-size:.92rem;
+      font-weight:700;
+      transition:.2s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active{
+      color:var(--text);
+      background:var(--surface2);
+    }
+
+    .nav-actions{
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    .icon-btn,
+    .menu-btn{
+      width:44px;
+      height:44px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:var(--surface);
+      color:var(--text);
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      transition:.2s ease;
+    }
+
+    .icon-btn:hover,
+    .menu-btn:hover{
+      transform:translateY(-2px);
+      box-shadow:var(--shadow-soft);
+    }
+
+    .menu-btn{display:none;font-size:1.25rem}
+
+    .hero{
+      padding:70px 0 46px;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.25fr .75fr;
+      gap:18px;
+      align-items:stretch;
+    }
+
+    .featured{
+      position:relative;
+      min-height:560px;
+      overflow:hidden;
+      border-radius:38px;
+      border:1px solid var(--line);
+      background:#111;
+      box-shadow:var(--shadow);
+      isolation:isolate;
+    }
+
+    .featured img{
+      width:100%;
+      height:100%;
+      position:absolute;
+      inset:0;
+      object-fit:cover;
+      filter:saturate(1.05) contrast(1.04);
+      transform:scale(1.02);
+      transition:.5s ease;
+    }
+
+    .featured:hover img{
+      transform:scale(1.06);
+    }
+
+    .featured::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.06), rgba(0,0,0,.82)),
+        radial-gradient(circle at 25% 15%, rgba(255,255,255,.16), transparent 28%);
+      z-index:1;
+    }
+
+    .featured-content{
+      position:absolute;
+      inset:auto 0 0;
+      z-index:2;
+      padding:30px;
+      color:white;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      padding:7px 11px;
+      border-radius:999px;
+      background:rgba(239,68,68,.92);
+      color:white;
+      font-size:.8rem;
+      font-weight:900;
+      backdrop-filter:blur(10px);
+    }
+
+    .badge.blue{background:rgba(37,99,235,.92)}
+    .badge.green{background:rgba(16,185,129,.92)}
+    .badge.orange{background:rgba(245,158,11,.92)}
+    .badge.purple{background:rgba(139,92,246,.92)}
+
+    h1,h2,h3,p{margin-top:0}
+
+    .featured h1{
+      margin:16px 0 12px;
+      font-size:clamp(2.2rem,4.5vw,4.8rem);
+      line-height:1.12;
+      letter-spacing:-2.5px;
+      max-width:820px;
+    }
+
+    .featured p{
+      color:rgba(255,255,255,.76);
+      line-height:2;
+      max-width:710px;
+      margin-bottom:18px;
+    }
+
+    .meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+      color:rgba(255,255,255,.72);
+      font-size:.86rem;
+    }
+
+    .meta span{
+      display:inline-flex;
+      align-items:center;
+      gap:5px;
+      padding:6px 9px;
+      border-radius:999px;
+      background:rgba(255,255,255,.10);
+      backdrop-filter:blur(10px);
+    }
+
+    .hero-side{
+      display:grid;
+      gap:14px;
+    }
+
+    .side-card{
+      overflow:hidden;
+      border-radius:30px;
+      border:1px solid var(--line);
+      background:var(--surface);
+      box-shadow:var(--shadow-soft);
+      display:grid;
+      grid-template-columns:135px 1fr;
+      min-height:174px;
+      transition:.22s ease;
+    }
+
+    .side-card:hover{
+      transform:translateY(-4px);
+      box-shadow:var(--shadow);
+    }
+
+    .side-card img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .side-card-content{
+      padding:16px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:8px;
+    }
+
+    .side-card h3{
+      margin:0;
+      font-size:1.02rem;
+      line-height:1.65;
+    }
+
+    .side-card small{
+      color:var(--muted);
+      font-weight:700;
+    }
+
+    .breaking{
+      overflow:hidden;
+      border-block:1px solid var(--line);
+      background:var(--surface);
+      box-shadow:0 8px 25px rgba(17,24,39,.04);
+    }
+
+    .breaking-inner{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      min-height:54px;
+    }
+
+    .breaking-label{
+      min-width:max-content;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      color:white;
+      background:var(--red);
+      padding:8px 12px;
+      border-radius:999px;
+      font-weight:900;
+      font-size:.85rem;
+    }
+
+    .breaking-label i{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:white;
+      animation:pulse 1.5s infinite;
+    }
+
+    @keyframes pulse{
+      70%{box-shadow:0 0 0 10px rgba(255,255,255,0)}
+      100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}
+    }
+
+    .ticker{
+      flex:1;
+      overflow:hidden;
+      white-space:nowrap;
+    }
+
+    .ticker-track{
+      display:inline-flex;
+      gap:34px;
+      width:max-content;
+      animation:ticker 28s linear infinite;
+      color:var(--muted);
+      font-weight:800;
+    }
+
+    .ticker-track span::before{
+      content:"•";
+      color:var(--red);
+      margin-left:10px;
+    }
+
+    @keyframes ticker{
+      to{transform:translateX(50%)}
+    }
+
+    .section{
+      padding:82px 0;
+    }
+
+    .section-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:end;
+      gap:22px;
+      margin-bottom:28px;
+    }
+
+    .kicker{
+      color:var(--primary);
+      display:block;
+      font-weight:900;
+      margin-bottom:8px;
+    }
+
+    h2{
+      margin:0;
+      font-size:clamp(1.85rem,3.4vw,3.55rem);
+      line-height:1.22;
+      letter-spacing:-1.6px;
+    }
+
+    .section-head p{
+      margin:0;
+      max-width:520px;
+      color:var(--muted);
+      line-height:2;
+    }
+
+    .news-layout{
+      display:grid;
+      grid-template-columns:1fr 330px;
+      gap:18px;
+      align-items:start;
+    }
+
+    .toolbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:16px;
+    }
+
+    .filters{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+
+    .filter{
+      border:1px solid var(--line);
+      background:var(--surface);
+      color:var(--muted);
+      cursor:pointer;
+      padding:10px 13px;
+      border-radius:999px;
+      font-weight:900;
+      transition:.2s ease;
+    }
+
+    .filter:hover,
+    .filter.active{
+      color:white;
+      border-color:transparent;
+      background:linear-gradient(135deg,var(--primary),#06b6d4);
+    }
+
+    .search{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      min-width:min(320px,100%);
+      height:46px;
+      padding:0 12px;
+      border-radius:17px;
+      border:1px solid var(--line);
+      background:var(--surface);
+    }
+
+    .search input{
+      width:100%;
+      min-width:0;
+      border:0;
+      outline:0;
+      background:transparent;
+      color:var(--text);
+      font-weight:700;
+    }
+
+    .search input::placeholder{color:var(--muted)}
+
+    .articles-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:16px;
+    }
+
+    .article-card{
+      overflow:hidden;
+      border-radius:30px;
+      background:var(--surface);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow-soft);
+      transition:.24s ease;
+    }
+
+    .article-card:hover{
+      transform:translateY(-6px);
+      box-shadow:var(--shadow);
+    }
+
+    .article-media{
+      position:relative;
+      height:220px;
+      overflow:hidden;
+    }
+
+    .article-media img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      transition:.45s ease;
+    }
+
+    .article-card:hover .article-media img{
+      transform:scale(1.06);
+    }
+
+    .article-body{
+      padding:18px;
+    }
+
+    .article-body h3{
+      margin:0 0 9px;
+      font-size:1.16rem;
+      line-height:1.65;
+    }
+
+    .article-body p{
+      color:var(--muted);
+      line-height:1.9;
+      font-size:.92rem;
+      margin:0 0 14px;
+    }
+
+    .card-footer{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding-top:14px;
+      border-top:1px solid var(--line);
+    }
+
+    .read-btn{
+      border:0;
+      cursor:pointer;
+      color:white;
+      background:var(--text);
+      padding:10px 13px;
+      border-radius:15px;
+      font-weight:900;
+      transition:.2s ease;
+    }
+
+    .read-btn:hover{
+      background:var(--primary);
+      transform:translateY(-2px);
+    }
+
+    .save-btn{
+      width:40px;
+      height:40px;
+      border:1px solid var(--line);
+      border-radius:15px;
+      background:var(--surface2);
+      color:var(--muted);
+      cursor:pointer;
+      font-weight:900;
+      transition:.2s ease;
+    }
+
+    .save-btn.active{
+      color:var(--red);
+      background:rgba(239,68,68,.10);
+      border-color:rgba(239,68,68,.20);
+    }
+
+    .sidebar-panel{
+      border-radius:30px;
+      background:var(--surface);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow-soft);
+      padding:18px;
+      margin-bottom:16px;
+    }
+
+    .sidebar-panel h3{
+      margin:0 0 14px;
+      font-size:1.1rem;
+    }
+
+    .trending-list{
+      display:grid;
+      gap:12px;
+      counter-reset:item;
+    }
+
+    .trend-item{
+      display:grid;
+      grid-template-columns:42px 1fr;
+      gap:10px;
+      align-items:start;
+      padding:12px;
+      border-radius:18px;
+      background:var(--surface2);
+      transition:.2s ease;
+      counter-increment:item;
+    }
+
+    .trend-item:hover{
+      transform:translateX(-3px);
+    }
+
+    .trend-num{
+      width:42px;
+      height:42px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      color:white;
+      background:linear-gradient(135deg,var(--red),var(--primary));
+      font-weight:900;
+    }
+
+    .trend-num::before{
+      content:counter(item);
+    }
+
+    .trend-item strong{
+      display:block;
+      line-height:1.7;
+      font-size:.92rem;
+    }
+
+    .trend-item span{
+      color:var(--muted);
+      font-size:.78rem;
+    }
+
+    .newsletter{
+      background:
+        radial-gradient(circle at 15% 15%, rgba(37,99,235,.16), transparent 34%),
+        var(--surface);
+    }
+
+    .newsletter p{
+      color:var(--muted);
+      line-height:1.85;
+      margin-bottom:14px;
+    }
+
+    .newsletter-form{
+      display:grid;
+      gap:9px;
+    }
+
+    .newsletter-form input{
+      width:100%;
+      border:1px solid var(--line);
+      background:var(--surface);
+      color:var(--text);
+      outline:0;
+      border-radius:16px;
+      padding:13px;
+    }
+
+    .newsletter-form button{
+      border:0;
+      cursor:pointer;
+      border-radius:16px;
+      padding:13px;
+      color:white;
+      background:linear-gradient(135deg,var(--primary),#06b6d4);
+      font-weight:900;
+    }
+
+    .mag-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:16px;
+    }
+
+    .mag-card{
+      min-height:300px;
+      border-radius:30px;
+      padding:22px;
+      background:var(--surface);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow-soft);
+      transition:.22s ease;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .mag-card::after{
+      content:"";
+      position:absolute;
+      width:130px;
+      height:130px;
+      border-radius:50%;
+      left:-52px;
+      bottom:-58px;
+      background:var(--primary);
+      opacity:.10;
+    }
+
+    .mag-card:hover{
+      transform:translateY(-6px);
+      box-shadow:var(--shadow);
+    }
+
+    .mag-icon{
+      width:58px;
+      height:58px;
+      display:grid;
+      place-items:center;
+      border-radius:21px;
+      background:var(--surface2);
+      font-size:1.6rem;
+      margin-bottom:18px;
+    }
+
+    .mag-card h3{
+      margin-bottom:10px;
+      font-size:1.23rem;
+    }
+
+    .mag-card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.95;
+    }
+
+    .opinion{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+    }
+
+    .opinion-card{
+      display:grid;
+      grid-template-columns:120px 1fr;
+      gap:16px;
+      align-items:center;
+      padding:16px;
+      border-radius:30px;
+      background:var(--surface);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow-soft);
+      transition:.22s ease;
+    }
+
+    .opinion-card:hover{
+      transform:translateY(-5px);
+      box-shadow:var(--shadow);
+    }
+
+    .author-img{
+      width:120px;
+      height:120px;
+      border-radius:28px;
+      object-fit:cover;
+    }
+
+    .opinion-card h3{
+      margin-bottom:8px;
+      line-height:1.6;
+    }
+
+    .opinion-card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.85;
+      font-size:.92rem;
+    }
+
+    .cta{
+      text-align:center;
+      padding:74px 22px;
+      border-radius:42px;
+      border:1px solid var(--line);
+      background:
+        radial-gradient(circle at 18% 22%, rgba(239,68,68,.13), transparent 34%),
+        radial-gradient(circle at 82% 28%, rgba(37,99,235,.16), transparent 34%),
+        var(--surface);
+      box-shadow:var(--shadow);
+    }
+
+    .cta h2{
+      max-width:820px;
+      margin-inline:auto;
+      margin-bottom:14px;
+    }
+
+    .cta p{
+      color:var(--muted);
+      line-height:2;
+      max-width:690px;
+      margin:0 auto 24px;
+    }
+
+    .primary-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:50px;
+      padding:13px 18px;
+      border-radius:17px;
+      color:white;
+      background:linear-gradient(135deg,var(--red),var(--primary));
+      font-weight:900;
+      box-shadow:0 16px 35px rgba(37,99,235,.20);
+      transition:.2s ease;
+    }
+
+    .primary-btn:hover{
+      transform:translateY(-2px);
+      box-shadow:var(--shadow);
+    }
+
+    .footer{
+      padding:30px 0 44px;
+      color:var(--muted);
+      text-align:center;
+      font-size:.94rem;
+    }
+
+    .backtop{
+      position:fixed;
+      left:18px;
+      bottom:18px;
+      z-index:80;
+      width:46px;
+      height:46px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:var(--surface);
+      color:var(--text);
+      box-shadow:var(--shadow-soft);
+      cursor:pointer;
+      opacity:0;
+      pointer-events:none;
+      transform:translateY(12px);
+      transition:.2s ease;
+    }
+
+    .backtop.show{
+      opacity:1;
+      pointer-events:auto;
+      transform:translateY(0);
+    }
+
+    .modal{
+      position:fixed;
+      inset:0;
+      z-index:1000;
+      display:grid;
+      place-items:center;
+      padding:20px;
+      background:rgba(8,17,31,.55);
+      backdrop-filter:blur(12px);
+      opacity:0;
+      pointer-events:none;
+      transition:.22s ease;
+    }
+
+    .modal.show{
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    .modal-card{
+      width:min(760px,100%);
+      max-height:min(88vh,820px);
+      overflow:auto;
+      border-radius:34px;
+      background:var(--surface);
+      border:1px solid var(--line);
+      box-shadow:0 34px 100px rgba(0,0,0,.32);
+      transform:translateY(18px) scale(.98);
+      transition:.22s ease;
+    }
+
+    .modal.show .modal-card{
+      transform:translateY(0) scale(1);
+    }
+
+    .modal-cover{
+      height:300px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .modal-cover img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .modal-body{
+      padding:24px;
+    }
+
+    .modal-head{
+      display:flex;
+      align-items:start;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:14px;
+    }
+
+    .modal-head h3{
+      margin:0;
+      font-size:1.8rem;
+      line-height:1.45;
+      letter-spacing:-.7px;
+    }
+
+    .close{
+      width:42px;
+      height:42px;
+      min-width:42px;
+      border:1px solid var(--line);
+      border-radius:15px;
+      background:var(--surface2);
+      color:var(--text);
+      cursor:pointer;
+      font-size:1.35rem;
+    }
+
+    .modal-text{
+      color:var(--muted);
+      line-height:2.1;
+      font-size:1rem;
+    }
+
+    .reveal{
+      opacity:0;
+      transform:translateY(22px);
+      transition:opacity .65s ease, transform .65s cubic-bezier(.2,.8,.2,1);
+    }
+
+    .reveal.visible{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    .delay-1{transition-delay:.08s}
+    .delay-2{transition-delay:.16s}
+    .delay-3{transition-delay:.24s}
+
+    @media (max-width:1000px){
+      .hero-grid,
+      .news-layout{
+        grid-template-columns:1fr;
+      }
+
+      .hero-side{
+        grid-template-columns:repeat(3,minmax(0,1fr));
+      }
+
+      .side-card{
+        grid-template-columns:1fr;
+      }
+
+      .side-card img{
+        height:145px;
+      }
+
+      .mag-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+    }
+
+    @media (max-width:760px){
+      .nav{
+        border-radius:24px;
+      }
+
+      .nav-links{
+        position:absolute;
+        top:72px;
+        right:0;
+        left:0;
+        display:grid;
+        padding:12px;
+        border-radius:24px;
+        background:var(--surface);
+        border:1px solid var(--line);
+        box-shadow:var(--shadow-soft);
+        opacity:0;
+        transform:translateY(-8px);
+        pointer-events:none;
+        transition:.2s ease;
+      }
+
+      .nav.open .nav-links{
+        opacity:1;
+        transform:translateY(0);
+        pointer-events:auto;
+      }
+
+      .menu-btn{display:grid}
+      .brand small{display:none}
+
+      .hero{
+        padding-top:48px;
+      }
+
+      .featured{
+        min-height:500px;
+        border-radius:30px;
+      }
+
+      .featured-content{
+        padding:22px;
+      }
+
+      .featured h1{
+        letter-spacing:-1.4px;
+      }
+
+      .hero-side,
+      .articles-grid,
+      .mag-grid,
+      .opinion{
+        grid-template-columns:1fr;
+      }
+
+      .side-card{
+        grid-template-columns:120px 1fr;
+      }
+
+      .side-card img{
+        height:100%;
+      }
+
+      .section{
+        padding:66px 0;
+      }
+
+      .section-head{
+        display:block;
+      }
+
+      .section-head p{
+        margin-top:12px;
+      }
+
+      .toolbar{
+        align-items:stretch;
+      }
+
+      .search{
+        width:100%;
+      }
+
+      .filters{
+        width:100%;
+      }
+
+      .filter{
+        flex:1;
+      }
+
+      .opinion-card{
+        grid-template-columns:1fr;
+      }
+
+      .author-img{
+        width:100%;
+        height:220px;
+      }
+
+      .modal-cover{
+        height:230px;
+      }
+
+      .modal-head h3{
+        font-size:1.35rem;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *,*::before,*::after{
+        animation-duration:.001ms !important;
+        animation-iteration-count:1 !important;
+        transition-duration:.001ms !important;
+        scroll-behavior:auto !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="container">
+      <nav class="nav" id="nav">
+        <a href="#home" class="brand" aria-label="نبض‌نامه">
+          <span class="brand-logo">NABZ</span>
+          <span>
+            <strong>نبض‌نامه</strong>
+            <small>خبر، تحلیل و مجله آنلاین</small>
+          </span>
+        </a>
+
+        <div class="nav-links" id="navLinks">
+          <a href="#home" class="active">خانه</a>
+          <a href="#latest">آخرین اخبار</a>
+          <a href="#magazine">مجله</a>
+          <a href="#opinion">یادداشت‌ها</a>
+          <a href="#newsletter">عضویت</a>
+        </div>
+
+        <div class="nav-actions">
+          <button class="icon-btn" id="themeToggle" type="button" aria-label="تغییر حالت تاریک و روشن">☾</button>
+          <button class="menu-btn" id="menuBtn" type="button" aria-label="باز کردن منو">☰</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="container hero-grid">
+        <article class="featured reveal">
+          <img src="https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&w=1300&q=82" alt="روزنامه و خبر" fetchpriority="high">
+          <div class="featured-content">
+            <span class="badge">خبر فوری</span>
+            <h1>نبض تازه‌ترین خبرها؛ سریع، دقیق و خواندنی</h1>
+            <p>
+              نبض‌نامه یک نمونه وبسایت خبری و مجله‌ای فارسی است؛ با خبرهای فوری، دسته‌بندی موضوعی، جستجوی زنده، مقالات تحلیلی و تجربه کاملاً ریسپانسیو.
+            </p>
+            <div class="meta">
+              <span>🕒 بروزرسانی امروز</span>
+              <span>✍ تحریریه نبض‌نامه</span>
+              <span>👁 ۱۲.۴ هزار بازدید</span>
+            </div>
+          </div>
+        </article>
+
+        <aside class="hero-side">
+          <article class="side-card reveal delay-1">
+            <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=700&q=80" alt="تکنولوژی">
+            <div class="side-card-content">
+              <span class="badge blue">تکنولوژی</span>
+              <h3>هوش مصنوعی چگونه مدل کار رسانه‌ها را تغییر می‌دهد؟</h3>
+              <small>۸ دقیقه مطالعه</small>
+            </div>
+          </article>
+
+          <article class="side-card reveal delay-2">
+            <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=700&q=80" alt="سبک زندگی">
+            <div class="side-card-content">
+              <span class="badge green">زندگی</span>
+              <h3>راهنمای ساخت یک روتین آرام برای روزهای شلوغ</h3>
+              <small>۵ دقیقه مطالعه</small>
+            </div>
+          </article>
+
+          <article class="side-card reveal delay-3">
+            <img src="https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=700&q=80" alt="اقتصاد">
+            <div class="side-card-content">
+              <span class="badge orange">اقتصاد</span>
+              <h3>بازارهای نوظهور در سال جدید چه روندی دارند؟</h3>
+              <small>۷ دقیقه مطالعه</small>
+            </div>
+          </article>
+        </aside>
+      </div>
+    </section>
+
+    <div class="breaking">
+      <div class="container breaking-inner">
+        <span class="breaking-label"><i></i> فوری</span>
+        <div class="ticker">
+          <div class="ticker-track">
+            <span>افزایش سرمایه‌گذاری در استارتاپ‌های هوش مصنوعی</span>
+            <span>ترافیک جاده‌های شمالی در آخر هفته سنگین پیش‌بینی شد</span>
+            <span>رشد فروش آنلاین در کسب‌وکارهای کوچک</span>
+            <span>انتشار گزارش تازه درباره امنیت سایبری کاربران</span>
+            <span>بررسی تازه‌ترین ترندهای طراحی و سبک زندگی</span>
+            <span>افزایش سرمایه‌گذاری در استارتاپ‌های هوش مصنوعی</span>
+            <span>ترافیک جاده‌های شمالی در آخر هفته سنگین پیش‌بینی شد</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="section" id="latest">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <span class="kicker">آخرین اخبار</span>
+            <h2>خبرها را براساس علاقه‌ات دنبال کن</h2>
+          </div>
+          <p>
+            با فیلتر دسته‌بندی و جستجوی زنده، محتوای دلخواه را سریع پیدا کن. کارت‌ها از طریق جاوااسکریپت رندر می‌شوند.
+          </p>
+        </div>
+
+        <div class="news-layout">
+          <div>
+            <div class="toolbar reveal">
+              <div class="filters">
+                <button class="filter active" type="button" data-filter="all">همه</button>
+                <button class="filter" type="button" data-filter="tech">تکنولوژی</button>
+                <button class="filter" type="button" data-filter="economy">اقتصاد</button>
+                <button class="filter" type="button" data-filter="culture">فرهنگ</button>
+                <button class="filter" type="button" data-filter="life">زندگی</button>
+              </div>
+
+              <label class="search">
+                🔎
+                <input id="searchInput" type="search" placeholder="جستجوی خبر..." />
+              </label>
+            </div>
+
+            <div class="articles-grid" id="articlesGrid"></div>
+          </div>
+
+          <aside>
+            <div class="sidebar-panel reveal delay-1">
+              <h3>پربازدیدترین‌ها</h3>
+              <div class="trending-list" id="trendingList"></div>
+            </div>
+
+            <div class="sidebar-panel newsletter reveal delay-2" id="newsletter">
+              <h3>عضویت در خبرنامه</h3>
+              <p>هر هفته خلاصه مهم‌ترین خبرها و تحلیل‌های منتخب را در ایمیل خود دریافت کنید.</p>
+              <form class="newsletter-form" id="newsletterForm">
+                <input type="email" placeholder="ایمیل شما" required />
+                <button type="submit">عضویت</button>
+              </form>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="magazine">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <span class="kicker">مجله آنلاین</span>
+            <h2>فراتر از خبر؛ روایت، تحلیل و تجربه</h2>
+          </div>
+          <p>
+            بخش مجله برای محتواهای طولانی‌تر، راهنماها، گزارش‌های ویژه و مطالب سبک زندگی طراحی شده است.
+          </p>
+        </div>
+
+        <div class="mag-grid">
+          <article class="mag-card reveal">
+            <div class="mag-icon">🧠</div>
+            <h3>پرونده ویژه هوش مصنوعی</h3>
+            <p>بررسی تأثیر ابزارهای هوشمند بر کار، آموزش، رسانه و سبک تصمیم‌گیری روزمره.</p>
+          </article>
+
+          <article class="mag-card reveal delay-1">
+            <div class="mag-icon">🏙️</div>
+            <h3>شهر و زندگی مدرن</h3>
+            <p>از حمل‌ونقل شهری تا فضاهای عمومی؛ شهرها چگونه کیفیت زندگی را تغییر می‌دهند؟</p>
+          </article>
+
+          <article class="mag-card reveal delay-2">
+            <div class="mag-icon">📈</div>
+            <h3>اقتصاد قابل فهم</h3>
+            <p>تحلیل‌های ساده و کاربردی از بازار، کسب‌وکار، سرمایه‌گذاری و اقتصاد دیجیتال.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="opinion">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <span class="kicker">یادداشت‌ها</span>
+            <h2>نگاه نویسندگان و تحلیلگران</h2>
+          </div>
+          <p>
+            یادداشت‌های تحلیلی و دیدگاه‌های کوتاه برای مخاطبانی که به عمق ماجرا علاقه دارند.
+          </p>
+        </div>
+
+        <div class="opinion">
+          <article class="opinion-card reveal">
+            <img class="author-img" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=500&q=80" alt="نویسنده">
+            <div>
+              <span class="badge purple">یادداشت</span>
+              <h3>چرا اعتماد، مهم‌ترین دارایی رسانه‌های آنلاین است؟</h3>
+              <p>در دنیای سرعت و شبکه‌های اجتماعی، شفافیت و دقت می‌تواند مرز میان رسانه معتبر و صدای گم‌شده باشد.</p>
+            </div>
+          </article>
+
+          <article class="opinion-card reveal delay-1">
+            <img class="author-img" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=500&q=80" alt="تحلیلگر">
+            <div>
+              <span class="badge blue">تحلیل</span>
+              <h3>آینده خبرخوانی شخصی‌سازی‌شده چه شکلی خواهد بود؟</h3>
+              <p>الگوریتم‌ها خبرها را سریع‌تر به ما می‌رسانند، اما انتخاب آگاهانه همچنان مهم‌ترین مهارت مخاطب است.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="cta reveal">
+          <h2>قصد دارید رسانه خود را راه اندازی کنید؟ با من تماس بگیرید</h2>
+          <p>
+        آنچه در ذهن دارید را به عمل بیاورید به تلاشی که میکنیم باور داشته باشید و شاهد معجزه باشید ، تلاش بلاخره نتیجه میده ، کافیست امروز شروع کنیم 
+          </p>
+         <a class="btn" href="tel:09032059983">تماس با طراح سایت ، محمد علی اسکاش</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+     </span>  نبض‌نامه — نمونه وبسایت خبری و مجله آنلاین ساخته شده با ❤ توسط محمد علی اسکاش
+    </div>
+  </footer>
+
+  <button class="backtop" id="backtop" type="button" aria-label="بازگشت به بالا">↑</button>
+
+  <div class="modal" id="articleModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-cover">
+        <img id="modalImg" src="" alt="">
+      </div>
+      <div class="modal-body">
+        <div class="modal-head">
+          <h3 id="modalTitle">عنوان خبر</h3>
+          <button class="close" id="closeModal" type="button" aria-label="بستن">×</button>
+        </div>
+        <div class="meta" id="modalMeta" style="color:var(--muted);margin-bottom:14px"></div>
+        <p class="modal-text" id="modalText"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const nf = new Intl.NumberFormat("fa-IR");
+
+      const articles = [
+        {
+          id:1,
+          category:"tech",
+          label:"تکنولوژی",
+          badge:"blue",
+          title:"رقابت تازه شرکت‌ها برای ساخت دستیارهای هوشمند شخصی",
+          desc:"دستیارهای هوشمند از پاسخ‌گویی ساده عبور کرده‌اند و حالا به ابزار تصمیم‌سازی، برنامه‌ریزی و تولید محتوا تبدیل شده‌اند.",
+          img:"https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80",
+          author:"سارا احمدی",
+          read:"۶ دقیقه",
+          views:18400
+        },
+        {
+          id:2,
+          category:"economy",
+          label:"اقتصاد",
+          badge:"orange",
+          title:"کسب‌وکارهای کوچک چگونه از فروش آنلاین رشد می‌گیرند؟",
+          desc:"گزارش‌ها نشان می‌دهد فروش آنلاین برای برندهای کوچک دیگر یک انتخاب جانبی نیست، بلکه بخش اصلی مدل درآمدی آن‌هاست.",
+          img:"https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=900&q=80",
+          author:"نیما رضایی",
+          read:"۸ دقیقه",
+          views:12600
+        },
+        {
+          id:3,
+          category:"culture",
+          label:"فرهنگ",
+          badge:"purple",
+          title:"بازگشت مجلات بلندخوان به سلیقه نسل دیجیتال",
+          desc:"مخاطبان جوان دوباره به روایت‌های طولانی، گزارش‌های تصویری و تحلیل‌های عمیق علاقه نشان می‌دهند.",
+          img:"https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=900&q=80",
+          author:"مهسا کریمی",
+          read:"۵ دقیقه",
+          views:9800
+        },
+        {
+          id:4,
+          category:"life",
+          label:"زندگی",
+          badge:"green",
+          title:"چطور در میان حجم خبرها آرامش ذهنی خود را حفظ کنیم؟",
+          desc:"مدیریت مصرف خبر، انتخاب منابع معتبر و فاصله گرفتن از اعلان‌های بی‌پایان می‌تواند کیفیت زندگی روزانه را بهتر کند.",
+          img:"https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=900&q=80",
+          author:"رها نوری",
+          read:"۴ دقیقه",
+          views:15200
+        },
+        {
+          id:5,
+          category:"tech",
+          label:"تکنولوژی",
+          badge:"blue",
+          title:"امنیت سایبری برای کاربران عادی؛ نکاتی که باید جدی گرفت",
+          desc:"رمزهای عبور قوی، احراز هویت دومرحله‌ای و دقت در لینک‌ها، سه قدم ساده برای کاهش ریسک‌های دیجیتال هستند.",
+          img:"https://images.unsplash.com/photo-1510511459019-5dda7724fd87?auto=format&fit=crop&w=900&q=80",
+          author:"آرمان شریفی",
+          read:"۷ دقیقه",
+          views:11300
+        },
+        {
+          id:6,
+          category:"economy",
+          label:"اقتصاد",
+          badge:"orange",
+          title:"تحلیل رفتار مصرف‌کننده در بازارهای آنلاین ایران",
+          desc:"سرعت ارسال، اعتماد به برند و تجربه کاربری حالا به اندازه قیمت در تصمیم خرید کاربران اثرگذار شده‌اند.",
+          img:"https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=900&q=80",
+          author:"کاوه محمدی",
+          read:"۹ دقیقه",
+          views:8700
+        }
+      ];
+
+      const grid = document.getElementById("articlesGrid");
+      const searchInput = document.getElementById("searchInput");
+      const filters = document.querySelectorAll(".filter");
+      let currentFilter = "all";
+      const saved = new Set();
+
+      function categoryBadge(article){
+        return `<span class="badge ${article.badge}">${article.label}</span>`;
+      }
+
+      function renderArticles(){
+        const q = searchInput.value.trim().toLowerCase();
+
+        const filtered = articles.filter(a => {
+          const passCat = currentFilter === "all" || a.category === currentFilter;
+          const text = `${a.title} ${a.desc} ${a.label} ${a.author}`.toLowerCase();
+          const passSearch = !q || text.includes(q);
+          return passCat && passSearch;
+        });
+
+        grid.innerHTML = filtered.length ? filtered.map(article => `
+          <article class="article-card reveal visible">
+            <div class="article-media">
+              <img src="${article.img}" alt="${article.title}" loading="lazy" decoding="async">
+              <span style="position:absolute;right:14px;top:14px">${categoryBadge(article)}</span>
+            </div>
+
+            <div class="article-body">
+              <h3>${article.title}</h3>
+              <p>${article.desc}</p>
+
+              <div class="meta" style="color:var(--muted);margin-bottom:12px">
+                <span>✍ ${article.author}</span>
+                <span>🕒 ${article.read}</span>
+                <span>👁 ${nf.format(article.views)}</span>
+              </div>
+
+              <div class="card-footer">
+                <button class="read-btn" type="button" data-read="${article.id}">مطالعه خبر</button>
+                <button class="save-btn ${saved.has(article.id) ? "active" : ""}" type="button" data-save="${article.id}" aria-label="ذخیره خبر">♥</button>
+              </div>
+            </div>
+          </article>
+        `).join("") : `<div class="sidebar-panel" style="grid-column:1/-1;text-align:center;color:var(--muted)">خبری با این جستجو پیدا نشد.</div>`;
+
+        bindArticleButtons();
+      }
+
+      function renderTrending(){
+        const trending = [...articles].sort((a,b) => b.views - a.views).slice(0,5);
+        document.getElementById("trendingList").innerHTML = trending.map(item => `
+          <button class="trend-item" type="button" data-read="${item.id}" style="border:0;text-align:right;cursor:pointer;color:inherit">
+            <span class="trend-num"></span>
+            <span>
+              <strong>${item.title}</strong>
+              <span>${nf.format(item.views)} بازدید</span>
+            </span>
+          </button>
+        `).join("");
+      }
+
+      const modal = document.getElementById("articleModal");
+      const modalImg = document.getElementById("modalImg");
+      const modalTitle = document.getElementById("modalTitle");
+      const modalMeta = document.getElementById("modalMeta");
+      const modalText = document.getElementById("modalText");
+
+      function openArticle(id){
+        const article = articles.find(a => a.id === Number(id));
+        if(!article) return;
+
+        modalImg.src = article.img;
+        modalImg.alt = article.title;
+        modalTitle.textContent = article.title;
+        modalMeta.innerHTML = `
+          <span>${article.label}</span>
+          <span>✍ ${article.author}</span>
+          <span>🕒 ${article.read}</span>
+          <span>👁 ${nf.format(article.views)}</span>
+        `;
+        modalText.textContent =
+          article.desc +
+          " این متن نمونه برای نمایش صفحه جزئیات خبر است. در نسخه واقعی می‌توان متن کامل، گالری تصاویر، ویدیو، برچسب‌ها، نویسنده، نظرات کاربران و خبرهای مرتبط را از پایگاه داده دریافت و نمایش داد. هدف این قالب، نمایش یک تجربه خبری تمیز، سریع و حرفه‌ای در قالب یک صفحه است.";
+
+        modal.classList.add("show");
+        modal.setAttribute("aria-hidden","false");
+      }
+
+      function closeArticle(){
+        modal.classList.remove("show");
+        modal.setAttribute("aria-hidden","true");
+      }
+
+      function bindArticleButtons(){
+        document.querySelectorAll("[data-read]").forEach(btn => {
+          btn.onclick = () => openArticle(btn.dataset.read);
+        });
+
+        document.querySelectorAll("[data-save]").forEach(btn => {
+          btn.onclick = () => {
+            const id = Number(btn.dataset.save);
+            if(saved.has(id)) saved.delete(id);
+            else saved.add(id);
+            btn.classList.toggle("active", saved.has(id));
+          };
+        });
+      }
+
+      filters.forEach(btn => {
+        btn.addEventListener("click", () => {
+          currentFilter = btn.dataset.filter;
+          filters.forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          renderArticles();
+        });
+      });
+
+      searchInput.addEventListener("input", renderArticles);
+
+      document.getElementById("closeModal").addEventListener("click", closeArticle);
+      modal.addEventListener("click", e => {
+        if(e.target === modal) closeArticle();
+      });
+
+      document.addEventListener("keydown", e => {
+        if(e.key === "Escape") closeArticle();
+      });
+
+      const revealObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if(entry.isIntersecting){
+            entry.target.classList.add("visible");
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold:.14, rootMargin:"0px 0px -45px 0px" });
+
+      document.querySelectorAll(".reveal").forEach(el => revealObserver.observe(el));
+
+      const backtop = document.getElementById("backtop");
+      window.addEventListener("scroll", () => {
+        backtop.classList.toggle("show", window.scrollY > 650);
+      }, { passive:true });
+
+      backtop.addEventListener("click", () => {
+        window.scrollTo({ top:0, behavior:prefersReduced ? "auto" : "smooth" });
+      });
+
+      const themeToggle = document.getElementById("themeToggle");
+      const savedTheme = localStorage.getItem("news-theme");
+      if(savedTheme === "dark") document.body.classList.add("dark");
+
+      function syncTheme(){
+        themeToggle.textContent = document.body.classList.contains("dark") ? "☀" : "☾";
+      }
+
+      syncTheme();
+
+      themeToggle.addEventListener("click", () => {
+        document.body.classList.toggle("dark");
+        localStorage.setItem("news-theme", document.body.classList.contains("dark") ? "dark" : "light");
+        syncTheme();
+      });
+
+      const nav = document.getElementById("nav");
+      const menuBtn = document.getElementById("menuBtn");
+      const navLinks = document.getElementById("navLinks");
+
+      menuBtn.addEventListener("click", () => {
+        nav.classList.toggle("open");
+        menuBtn.textContent = nav.classList.contains("open") ? "×" : "☰";
+      });
+
+      navLinks.querySelectorAll("a").forEach(a => {
+        a.addEventListener("click", () => {
+          nav.classList.remove("open");
+          menuBtn.textContent = "☰";
+        });
+      });
+
+      const pageLinks = [...document.querySelectorAll(".nav-links a")];
+      const sections = pageLinks.map(link => document.querySelector(link.getAttribute("href"))).filter(Boolean);
+
+      const navObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if(!entry.isIntersecting) return;
+          pageLinks.forEach(link => {
+            link.classList.toggle("active", link.getAttribute("href") === "#" + entry.target.id);
+          });
+        });
+      }, { threshold:.35, rootMargin:"-120px 0px -50% 0px" });
+
+      sections.forEach(sec => navObserver.observe(sec));
+
+      document.getElementById("newsletterForm").addEventListener("submit", e => {
+        e.preventDefault();
+        const btn = e.target.querySelector("button");
+        btn.textContent = "عضویت انجام شد ✓";
+        e.target.reset();
+        setTimeout(() => btn.textContent = "عضویت", 1800);
+      });
+
+      document.getElementById("year").textContent =
+        new Intl.NumberFormat("fa-IR", {useGrouping:false}).format(new Date().getFullYear());
+
+      renderTrending();
+      renderArticles();
+    })();
+  </script>
+</body>
+</html>

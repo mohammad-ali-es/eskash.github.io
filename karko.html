@@ -1,0 +1,2340 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#08111f" />
+  <meta name="description" content="نمونه‌کار وبسایت تک‌صفحه‌ای اپلیکیشن کاریابی کارکو؛ استخدام و کاریابی در سراسر ایران." />
+  <title>کارکو | اپلیکیشن استخدام در ایران</title>
+
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap");
+
+    :root{
+      --bg:#07101f;
+      --bg2:#0b1730;
+      --card:#101d35;
+      --card2:#132442;
+      --text:#f7fbff;
+      --muted:#9eb0cb;
+      --line:rgba(255,255,255,.12);
+      --white-soft:rgba(255,255,255,.075);
+      --cyan:#32d3ff;
+      --blue:#2f6bff;
+      --green:#37f5a1;
+      --yellow:#ffd166;
+      --pink:#ff5c9a;
+      --purple:#875cff;
+      --shadow:0 28px 90px rgba(0,0,0,.38);
+      --radius:28px;
+      --phone-w:390px;
+      --phone-h:790px;
+    }
+
+    *{box-sizing:border-box}
+
+    html{scroll-behavior:smooth}
+
+    body{
+      margin:0;
+      font-family:"Vazirmatn",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 15% 8%, rgba(50,211,255,.22), transparent 30%),
+        radial-gradient(circle at 88% 18%, rgba(135,92,255,.26), transparent 30%),
+        radial-gradient(circle at 50% 95%, rgba(55,245,161,.10), transparent 40%),
+        linear-gradient(180deg,var(--bg),var(--bg2) 48%,#050b16);
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:-3;
+      background-image:
+        linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+      background-size:54px 54px;
+      mask-image:radial-gradient(circle at center, black, transparent 82%);
+    }
+
+    body::after{
+      content:"";
+      position:fixed;
+      inset:-20%;
+      z-index:-4;
+      pointer-events:none;
+      background:conic-gradient(from 180deg, rgba(47,107,255,.18), rgba(50,211,255,.14), rgba(55,245,161,.10), rgba(135,92,255,.18), rgba(47,107,255,.18));
+      filter:blur(88px);
+      opacity:.72;
+      animation:aurora 18s linear infinite;
+    }
+
+    @keyframes aurora{
+      to{transform:rotate(1turn)}
+    }
+
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    button,input{font:inherit}
+    ::selection{background:var(--cyan);color:#06101f}
+
+    .container{
+      width:min(1180px, calc(100% - 36px));
+      margin-inline:auto;
+    }
+
+    .topbar{
+      position:fixed;
+      top:16px;
+      right:50%;
+      transform:translateX(50%);
+      z-index:1000;
+      width:min(1180px, calc(100% - 28px));
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:12px 14px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(7,16,31,.64);
+      backdrop-filter:blur(20px);
+      box-shadow:0 18px 60px rgba(0,0,0,.22);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:max-content;
+    }
+
+    .brand-logo{
+      width:42px;
+      height:42px;
+      display:grid;
+      place-items:center;
+      border-radius:16px;
+      background:linear-gradient(135deg,var(--green),var(--cyan),var(--blue));
+      box-shadow:0 0 34px rgba(50,211,255,.28);
+      color:#03101c;
+      font-size:1.35rem;
+      font-weight:900;
+    }
+
+    .brand strong{
+      font-size:1.15rem;
+      letter-spacing:-.5px;
+    }
+
+    .brand span:last-child{
+      display:block;
+      color:var(--muted);
+      font-size:.78rem;
+      margin-top:1px;
+    }
+
+    .nav{
+      display:flex;
+      align-items:center;
+      gap:4px;
+    }
+
+    .nav a{
+      padding:9px 13px;
+      border-radius:999px;
+      color:var(--muted);
+      font-size:.92rem;
+      transition:.2s ease;
+    }
+
+    .nav a:hover,
+    .nav a.active{
+      color:white;
+      background:rgba(255,255,255,.09);
+    }
+
+    .top-cta{
+      border:0;
+      cursor:pointer;
+      color:#06101f;
+      font-weight:900;
+      padding:12px 17px;
+      border-radius:999px;
+      background:linear-gradient(135deg,var(--green),var(--cyan));
+      box-shadow:0 15px 35px rgba(50,211,255,.22);
+      transition:.2s ease;
+    }
+
+    .top-cta:hover{transform:translateY(-2px)}
+
+    .hero{
+      min-height:100svh;
+      padding:132px 0 78px;
+      display:grid;
+      align-items:center;
+      position:relative;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1fr 470px;
+      align-items:center;
+      gap:58px;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:9px;
+      padding:8px 13px;
+      border-radius:999px;
+      color:#dffcff;
+      background:rgba(50,211,255,.10);
+      border:1px solid rgba(50,211,255,.22);
+      box-shadow:0 0 32px rgba(50,211,255,.08);
+      font-weight:700;
+      font-size:.92rem;
+    }
+
+    .dot{
+      width:9px;
+      height:9px;
+      border-radius:50%;
+      background:var(--green);
+      box-shadow:0 0 0 0 rgba(55,245,161,.7);
+      animation:pulse 1.8s infinite;
+    }
+
+    @keyframes pulse{
+      70%{box-shadow:0 0 0 12px rgba(55,245,161,0)}
+      100%{box-shadow:0 0 0 0 rgba(55,245,161,0)}
+    }
+
+    h1{
+      margin:20px 0 16px;
+      font-size:clamp(2.35rem, 6vw, 5.8rem);
+      line-height:1.08;
+      letter-spacing:-3px;
+      max-width:850px;
+    }
+
+    .grad{
+      color:transparent;
+      background:linear-gradient(90deg,#fff,var(--cyan),var(--green),var(--purple));
+      -webkit-background-clip:text;
+      background-clip:text;
+      background-size:220%;
+      animation:grad 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes grad{to{background-position:100%}}
+
+    .lead{
+      color:var(--muted);
+      font-size:clamp(1rem, 1.5vw, 1.16rem);
+      line-height:2.05;
+      max-width:720px;
+      margin-bottom:28px;
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-bottom:30px;
+    }
+
+    .btn{
+      position:relative;
+      overflow:hidden;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:9px;
+      min-height:52px;
+      padding:13px 18px;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.075);
+      color:white;
+      font-weight:900;
+      cursor:pointer;
+      backdrop-filter:blur(12px);
+      transition:transform .22s ease, border-color .22s ease, background .22s ease, box-shadow .22s ease;
+    }
+
+    .btn::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:radial-gradient(circle at var(--x,50%) var(--y,50%), rgba(255,255,255,.22), transparent 34%);
+      opacity:0;
+      transition:.2s ease;
+    }
+
+    .btn:hover{
+      transform:translateY(-3px);
+      border-color:rgba(50,211,255,.34);
+      background:rgba(255,255,255,.105);
+      box-shadow:0 18px 45px rgba(0,0,0,.16);
+    }
+
+    .btn:hover::before{opacity:1}
+
+    .btn-primary{
+      border:0;
+      color:#05111f;
+      background:linear-gradient(135deg,var(--green),var(--cyan));
+      box-shadow:0 18px 45px rgba(50,211,255,.22);
+    }
+
+    .hero-stats{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:12px;
+      max-width:720px;
+    }
+
+    .stat{
+      padding:16px;
+      border:1px solid var(--line);
+      border-radius:22px;
+      background:rgba(255,255,255,.065);
+      backdrop-filter:blur(14px);
+    }
+
+    .stat strong{
+      display:block;
+      color:white;
+      font-size:1.45rem;
+      margin-bottom:3px;
+    }
+
+    .stat span{
+      color:var(--muted);
+      font-size:.88rem;
+    }
+
+    .phone-stage{
+      position:sticky;
+      top:96px;
+      min-height:var(--phone-h);
+      display:grid;
+      place-items:center;
+      perspective:1400px;
+    }
+
+    .phone-wrap{
+      position:relative;
+      width:var(--phone-w);
+      height:var(--phone-h);
+      transform-style:preserve-3d;
+      animation:phoneFloat 7s ease-in-out infinite;
+    }
+
+    @keyframes phoneFloat{
+      50%{transform:translateY(-10px)}
+    }
+
+    .phone-glow{
+      position:absolute;
+      inset:28px;
+      border-radius:56px;
+      background:linear-gradient(135deg, rgba(50,211,255,.45), rgba(55,245,161,.22), rgba(135,92,255,.38));
+      filter:blur(34px);
+      opacity:.7;
+      z-index:-1;
+    }
+
+    .phone{
+      width:100%;
+      height:100%;
+      border-radius:58px;
+      padding:13px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.34), rgba(255,255,255,.05) 28%, rgba(0,0,0,.42)),
+        #07101f;
+      border:1px solid rgba(255,255,255,.22);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.09),
+        0 45px 120px rgba(0,0,0,.48);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .phone::before{
+      content:"";
+      position:absolute;
+      width:112px;
+      height:30px;
+      right:50%;
+      top:14px;
+      transform:translateX(50%);
+      border-radius:0 0 18px 18px;
+      background:#050a12;
+      z-index:5;
+      box-shadow:0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .phone::after{
+      content:"";
+      position:absolute;
+      width:5px;
+      height:96px;
+      left:-3px;
+      top:155px;
+      border-radius:999px;
+      background:rgba(255,255,255,.24);
+    }
+
+    .screen{
+      position:relative;
+      width:100%;
+      height:100%;
+      overflow:hidden;
+      border-radius:47px;
+      background:#f5f8fc;
+      color:#142033;
+      isolation:isolate;
+    }
+
+    .screen-bg{
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 18% 8%, rgba(50,211,255,.24), transparent 25%),
+        radial-gradient(circle at 88% 18%, rgba(55,245,161,.20), transparent 27%),
+        linear-gradient(180deg,#f7fbff 0,#eef5fb 58%,#eaf0f8);
+      z-index:-2;
+    }
+
+    .app{
+      height:100%;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .statusbar{
+      height:42px;
+      display:flex;
+      align-items:end;
+      justify-content:space-between;
+      padding:0 24px 8px;
+      font-size:.78rem;
+      font-weight:900;
+      color:#162338;
+    }
+
+    .status-icons{
+      display:flex;
+      gap:5px;
+      align-items:center;
+    }
+
+    .battery{
+      width:22px;
+      height:11px;
+      border:1.7px solid #162338;
+      border-radius:4px;
+      position:relative;
+    }
+
+    .battery::before{
+      content:"";
+      position:absolute;
+      inset:2px 3px;
+      border-radius:2px;
+      background:#162338;
+    }
+
+    .battery::after{
+      content:"";
+      position:absolute;
+      right:-4px;
+      top:3px;
+      width:2px;
+      height:5px;
+      border-radius:2px;
+      background:#162338;
+    }
+
+    .app-body{
+      position:relative;
+      flex:1;
+      overflow:hidden;
+    }
+
+    .app-screen{
+      position:absolute;
+      inset:0;
+      overflow:auto;
+      padding:10px 18px 94px;
+      opacity:0;
+      transform:translateX(-18px) scale(.985);
+      pointer-events:none;
+      transition:opacity .3s ease, transform .3s ease;
+      scrollbar-width:none;
+    }
+
+    .app-screen::-webkit-scrollbar{display:none}
+
+    .app-screen.active{
+      opacity:1;
+      transform:translateX(0) scale(1);
+      pointer-events:auto;
+    }
+
+    .app-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .hello small{
+      display:block;
+      color:#718096;
+      font-weight:700;
+      margin-bottom:3px;
+    }
+
+    .hello strong{
+      font-size:1.25rem;
+      letter-spacing:-.5px;
+    }
+
+    .avatar{
+      width:46px;
+      height:46px;
+      border-radius:18px;
+      display:grid;
+      place-items:center;
+      color:white;
+      font-weight:900;
+      background:linear-gradient(135deg,#182a48,var(--blue),var(--cyan));
+      box-shadow:0 12px 26px rgba(47,107,255,.22);
+    }
+
+    .searchbox{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:12px;
+      border-radius:22px;
+      background:white;
+      border:1px solid rgba(20,32,51,.07);
+      box-shadow:0 12px 30px rgba(25,48,83,.07);
+      margin-bottom:14px;
+    }
+
+    .searchbox span{
+      width:34px;
+      height:34px;
+      display:grid;
+      place-items:center;
+      border-radius:14px;
+      background:#eef5ff;
+    }
+
+    .searchbox input{
+      border:0;
+      outline:0;
+      min-width:0;
+      width:100%;
+      color:#142033;
+      background:transparent;
+      font-weight:700;
+    }
+
+    .searchbox input::placeholder{color:#8a98ad}
+
+    .quick-row{
+      display:flex;
+      gap:8px;
+      overflow:auto;
+      padding-bottom:4px;
+      margin-bottom:16px;
+      scrollbar-width:none;
+    }
+
+    .quick-row::-webkit-scrollbar{display:none}
+
+    .chip{
+      border:0;
+      cursor:pointer;
+      white-space:nowrap;
+      padding:9px 12px;
+      border-radius:999px;
+      color:#40536e;
+      background:white;
+      font-weight:800;
+      box-shadow:0 8px 20px rgba(25,48,83,.06);
+      transition:.2s ease;
+    }
+
+    .chip.active,
+    .chip:hover{
+      color:white;
+      background:#142033;
+    }
+
+    .ai-card{
+      position:relative;
+      overflow:hidden;
+      padding:18px;
+      border-radius:28px;
+      margin-bottom:16px;
+      background:
+        radial-gradient(circle at 12% 12%, rgba(255,255,255,.28), transparent 28%),
+        linear-gradient(135deg,#142033,#2555f6 62%,#32d3ff);
+      color:white;
+      box-shadow:0 20px 42px rgba(47,107,255,.22);
+    }
+
+    .ai-card::after{
+      content:"";
+      position:absolute;
+      width:110px;
+      height:110px;
+      left:-34px;
+      bottom:-38px;
+      border-radius:50%;
+      background:rgba(255,255,255,.14);
+    }
+
+    .ai-card small{
+      display:inline-flex;
+      padding:6px 9px;
+      border-radius:999px;
+      background:rgba(255,255,255,.14);
+      margin-bottom:9px;
+      font-weight:800;
+    }
+
+    .ai-card h3{
+      margin:0 0 8px;
+      font-size:1.22rem;
+    }
+
+    .ai-card p{
+      margin:0 0 14px;
+      line-height:1.7;
+      color:rgba(255,255,255,.78);
+      font-size:.88rem;
+    }
+
+    .match-line{
+      height:8px;
+      background:rgba(255,255,255,.18);
+      border-radius:999px;
+      overflow:hidden;
+    }
+
+    .match-line span{
+      display:block;
+      height:100%;
+      width:86%;
+      border-radius:inherit;
+      background:linear-gradient(90deg,var(--green),#fff);
+      animation:loadbar 1.8s ease both;
+    }
+
+    @keyframes loadbar{
+      from{width:0}
+    }
+
+    .section-title-app{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin:14px 0 10px;
+    }
+
+    .section-title-app h3{
+      margin:0;
+      font-size:1.03rem;
+    }
+
+    .section-title-app a{
+      color:#2f6bff;
+      font-size:.82rem;
+      font-weight:900;
+    }
+
+    .job-list{
+      display:grid;
+      gap:10px;
+    }
+
+    .job-card{
+      position:relative;
+      overflow:hidden;
+      display:grid;
+      grid-template-columns:52px 1fr auto;
+      gap:10px;
+      align-items:center;
+      padding:13px;
+      border-radius:24px;
+      background:white;
+      border:1px solid rgba(20,32,51,.065);
+      box-shadow:0 10px 26px rgba(25,48,83,.065);
+      transition:.2s ease;
+    }
+
+    .job-card:hover{
+      transform:translateY(-2px);
+      box-shadow:0 16px 34px rgba(25,48,83,.10);
+    }
+
+    .company-logo{
+      width:52px;
+      height:52px;
+      border-radius:18px;
+      display:grid;
+      place-items:center;
+      color:white;
+      font-weight:900;
+      background:linear-gradient(135deg,#142033,#2f6bff);
+    }
+
+    .logo-green{background:linear-gradient(135deg,#0b6b49,#37f5a1);color:#052014}
+    .logo-purple{background:linear-gradient(135deg,#4323aa,#875cff)}
+    .logo-yellow{background:linear-gradient(135deg,#9b6a00,#ffd166);color:#1b1300}
+
+    .job-info{
+      min-width:0;
+    }
+
+    .job-info h4{
+      margin:0 0 4px;
+      font-size:.93rem;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .job-info p{
+      margin:0;
+      color:#718096;
+      font-size:.78rem;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .save-btn{
+      width:36px;
+      height:36px;
+      border:0;
+      border-radius:14px;
+      cursor:pointer;
+      background:#f1f5fb;
+      color:#718096;
+      font-weight:900;
+      transition:.2s ease;
+    }
+
+    .save-btn.active{
+      color:#ff2f72;
+      background:#fff0f5;
+    }
+
+    .salary{
+      margin-top:8px;
+      display:inline-flex;
+      align-items:center;
+      gap:5px;
+      padding:5px 8px;
+      border-radius:999px;
+      background:#eefaf4;
+      color:#0d8a59;
+      font-size:.72rem;
+      font-weight:900;
+    }
+
+    .feature-mini{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+      margin:14px 0;
+    }
+
+    .mini-card{
+      padding:14px;
+      border-radius:24px;
+      background:white;
+      box-shadow:0 10px 26px rgba(25,48,83,.055);
+      border:1px solid rgba(20,32,51,.06);
+    }
+
+    .mini-icon{
+      width:38px;
+      height:38px;
+      display:grid;
+      place-items:center;
+      border-radius:15px;
+      margin-bottom:10px;
+      background:#eef5ff;
+    }
+
+    .mini-card strong{
+      display:block;
+      font-size:.86rem;
+      margin-bottom:3px;
+    }
+
+    .mini-card span{
+      color:#718096;
+      font-size:.73rem;
+      line-height:1.6;
+    }
+
+    .map-card{
+      position:relative;
+      min-height:270px;
+      border-radius:30px;
+      padding:18px;
+      background:
+        radial-gradient(circle at 50% 40%, rgba(50,211,255,.16), transparent 40%),
+        linear-gradient(135deg,#ffffff,#eef5ff);
+      box-shadow:0 14px 34px rgba(25,48,83,.08);
+      border:1px solid rgba(20,32,51,.06);
+      overflow:hidden;
+      margin-bottom:14px;
+    }
+
+    .iran-map{
+      position:absolute;
+      inset:60px 38px 24px;
+      opacity:.92;
+    }
+
+    .iran-shape{
+      width:100%;
+      height:100%;
+      background:linear-gradient(135deg,#d9f8ea,#dfe9ff);
+      clip-path:polygon(18% 30%,28% 18%,42% 16%,54% 23%,64% 18%,76% 28%,82% 44%,74% 56%,78% 72%,66% 82%,50% 78%,38% 86%,24% 73%,15% 60%,10% 44%);
+      border-radius:36px;
+      box-shadow:inset 0 0 0 2px rgba(47,107,255,.12);
+    }
+
+    .pin{
+      position:absolute;
+      width:14px;
+      height:14px;
+      border-radius:50%;
+      background:#2f6bff;
+      box-shadow:0 0 0 7px rgba(47,107,255,.13), 0 0 24px rgba(47,107,255,.35);
+      animation:pin 2s ease-in-out infinite;
+    }
+
+    .pin::after{
+      content:attr(data-city);
+      position:absolute;
+      bottom:18px;
+      right:50%;
+      transform:translateX(50%);
+      white-space:nowrap;
+      font-size:.7rem;
+      font-weight:900;
+      color:#142033;
+      background:white;
+      border-radius:999px;
+      padding:3px 7px;
+      box-shadow:0 8px 18px rgba(25,48,83,.10);
+    }
+
+    @keyframes pin{
+      50%{transform:translateY(-4px)}
+    }
+
+    .p1{right:48%;top:38%}
+    .p2{right:34%;top:47%;background:#37f5a1}
+    .p3{right:58%;top:31%;background:#875cff}
+    .p4{right:68%;top:52%;background:#ffd166}
+    .p5{right:24%;top:62%;background:#ff5c9a}
+
+    .map-title{
+      position:relative;
+      z-index:2;
+    }
+
+    .map-title h3{margin:0 0 5px}
+    .map-title p{margin:0;color:#718096;font-size:.84rem;line-height:1.6}
+
+    .analytics{
+      display:grid;
+      gap:10px;
+      margin-bottom:14px;
+    }
+
+    .ana-card{
+      padding:15px;
+      border-radius:24px;
+      background:white;
+      border:1px solid rgba(20,32,51,.06);
+      box-shadow:0 10px 26px rgba(25,48,83,.055);
+    }
+
+    .ana-top{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:10px;
+    }
+
+    .ana-top strong{font-size:.9rem}
+    .ana-top span{color:#2f6bff;font-weight:900;font-size:.82rem}
+
+    .bar{
+      height:9px;
+      border-radius:999px;
+      background:#edf2f8;
+      overflow:hidden;
+    }
+
+    .bar span{
+      display:block;
+      height:100%;
+      width:var(--w);
+      border-radius:inherit;
+      background:linear-gradient(90deg,#2f6bff,#32d3ff,#37f5a1);
+    }
+
+    .profile-card{
+      border-radius:30px;
+      padding:18px;
+      background:linear-gradient(135deg,#142033,#203b66);
+      color:white;
+      box-shadow:0 18px 42px rgba(20,32,51,.22);
+      margin-bottom:14px;
+    }
+
+    .profile-row{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .profile-row .avatar{
+      width:58px;
+      height:58px;
+      border-radius:22px;
+    }
+
+    .profile-row h3{margin:0 0 4px}
+    .profile-row p{margin:0;color:rgba(255,255,255,.65);font-size:.82rem}
+
+    .progress-ring{
+      display:grid;
+      grid-template-columns:1fr 86px;
+      align-items:center;
+      gap:16px;
+    }
+
+    .ring{
+      width:86px;
+      height:86px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:conic-gradient(var(--green) 82%, rgba(255,255,255,.14) 0);
+      position:relative;
+      font-weight:900;
+    }
+
+    .ring::before{
+      content:"";
+      position:absolute;
+      inset:9px;
+      border-radius:50%;
+      background:#142033;
+    }
+
+    .ring span{position:relative;z-index:1}
+
+    .task-list{
+      display:grid;
+      gap:10px;
+    }
+
+    .task{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:13px;
+      border-radius:22px;
+      background:white;
+      box-shadow:0 10px 26px rgba(25,48,83,.055);
+      border:1px solid rgba(20,32,51,.06);
+    }
+
+    .check{
+      width:28px;
+      height:28px;
+      border-radius:11px;
+      display:grid;
+      place-items:center;
+      color:#07101f;
+      background:#37f5a1;
+      font-weight:900;
+    }
+
+    .task div strong{display:block;font-size:.86rem}
+    .task div span{color:#718096;font-size:.74rem}
+
+    .bottom-nav{
+      position:absolute;
+      right:18px;
+      left:18px;
+      bottom:16px;
+      z-index:10;
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:7px;
+      padding:8px;
+      border-radius:26px;
+      background:rgba(255,255,255,.78);
+      backdrop-filter:blur(18px);
+      border:1px solid rgba(20,32,51,.07);
+      box-shadow:0 18px 42px rgba(25,48,83,.15);
+    }
+
+    .tab-btn{
+      border:0;
+      cursor:pointer;
+      height:54px;
+      border-radius:20px;
+      display:grid;
+      place-items:center;
+      gap:2px;
+      color:#7a8798;
+      background:transparent;
+      font-weight:900;
+      font-size:.69rem;
+      transition:.2s ease;
+    }
+
+    .tab-btn b{
+      font-size:1.15rem;
+      line-height:1;
+    }
+
+    .tab-btn.active{
+      color:#06101f;
+      background:#eaf3ff;
+      box-shadow:inset 0 0 0 1px rgba(47,107,255,.08);
+    }
+
+    .notify{
+      position:absolute;
+      top:88px;
+      left:18px;
+      right:18px;
+      z-index:20;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      padding:12px;
+      border-radius:22px;
+      background:rgba(20,32,51,.92);
+      color:white;
+      box-shadow:0 18px 44px rgba(20,32,51,.25);
+      transform:translateY(-150%);
+      opacity:0;
+      transition:.42s cubic-bezier(.2,.8,.2,1);
+    }
+
+    .notify.show{
+      transform:translateY(0);
+      opacity:1;
+    }
+
+    .notify span{
+      width:38px;
+      height:38px;
+      display:grid;
+      place-items:center;
+      border-radius:15px;
+      background:rgba(55,245,161,.15);
+    }
+
+    .notify strong{
+      display:block;
+      font-size:.82rem;
+    }
+
+    .notify small{
+      color:rgba(255,255,255,.65);
+      font-size:.7rem;
+    }
+
+    .floating-card{
+      position:absolute;
+      z-index:4;
+      width:205px;
+      padding:14px;
+      border-radius:22px;
+      background:rgba(255,255,255,.78);
+      color:#142033;
+      backdrop-filter:blur(18px);
+      border:1px solid rgba(255,255,255,.28);
+      box-shadow:0 18px 54px rgba(0,0,0,.18);
+      animation:softFloat 5.5s ease-in-out infinite;
+    }
+
+    @keyframes softFloat{
+      50%{transform:translateY(-10px)}
+    }
+
+    .float-1{
+      top:130px;
+      right:-98px;
+    }
+
+    .float-2{
+      left:-92px;
+      bottom:190px;
+      animation-delay:-1.5s;
+    }
+
+    .floating-card small{
+      display:block;
+      color:#718096;
+      font-weight:800;
+      margin-bottom:5px;
+    }
+
+    .floating-card strong{
+      display:block;
+      color:#142033;
+      font-size:.96rem;
+    }
+
+    .floating-card .mini-line{
+      margin-top:10px;
+      height:8px;
+      border-radius:999px;
+      background:#eaf0f7;
+      overflow:hidden;
+    }
+
+    .floating-card .mini-line span{
+      display:block;
+      height:100%;
+      width:78%;
+      border-radius:inherit;
+      background:linear-gradient(90deg,var(--blue),var(--cyan));
+    }
+
+    .marquee{
+      overflow:hidden;
+      border-block:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      backdrop-filter:blur(14px);
+    }
+
+    .marquee-track{
+      display:flex;
+      gap:38px;
+      width:max-content;
+      padding:15px 0;
+      animation:marquee 24s linear infinite;
+      color:#dffcff;
+      font-weight:900;
+    }
+
+    .marquee-track span{
+      white-space:nowrap;
+      opacity:.86;
+    }
+
+    @keyframes marquee{
+      to{transform:translateX(50%)}
+    }
+
+    .section{
+      padding:96px 0;
+      position:relative;
+    }
+
+    .section-head{
+      display:flex;
+      align-items:end;
+      justify-content:space-between;
+      gap:24px;
+      margin-bottom:32px;
+    }
+
+    .kicker{
+      color:var(--green);
+      font-weight:900;
+      letter-spacing:.5px;
+      margin-bottom:8px;
+      display:block;
+    }
+
+    h2{
+      margin:0;
+      font-size:clamp(2rem,4vw,4.1rem);
+      line-height:1.18;
+      letter-spacing:-2px;
+    }
+
+    .section-head p{
+      color:var(--muted);
+      line-height:2;
+      max-width:510px;
+      margin:0;
+    }
+
+    .feature-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:16px;
+    }
+
+    .feature-card{
+      position:relative;
+      overflow:hidden;
+      min-height:265px;
+      padding:24px;
+      border-radius:var(--radius);
+      background:
+        radial-gradient(circle at var(--mx,50%) var(--my,0%), rgba(255,255,255,.13), transparent 34%),
+        rgba(255,255,255,.065);
+      border:1px solid var(--line);
+      box-shadow:0 18px 55px rgba(0,0,0,.17);
+      transition:.25s ease;
+    }
+
+    .feature-card:hover{
+      transform:translateY(-6px);
+      border-color:rgba(50,211,255,.30);
+      background:
+        radial-gradient(circle at var(--mx,50%) var(--my,0%), rgba(50,211,255,.16), transparent 34%),
+        rgba(255,255,255,.085);
+    }
+
+    .feature-icon{
+      width:58px;
+      height:58px;
+      display:grid;
+      place-items:center;
+      border-radius:20px;
+      margin-bottom:18px;
+      background:linear-gradient(135deg,rgba(55,245,161,.18),rgba(50,211,255,.16));
+      border:1px solid rgba(255,255,255,.12);
+      font-size:1.55rem;
+    }
+
+    .feature-card h3{
+      margin:0 0 10px;
+      font-size:1.22rem;
+    }
+
+    .feature-card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.95;
+    }
+
+    .demo-section{
+      padding:96px 0;
+    }
+
+    .demo-box{
+      display:grid;
+      grid-template-columns:.9fr 1.1fr;
+      gap:22px;
+      align-items:center;
+      padding:24px;
+      border-radius:42px;
+      background:rgba(255,255,255,.065);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .demo-copy{
+      padding:22px;
+    }
+
+    .demo-copy p{
+      color:var(--muted);
+      line-height:2;
+      margin:16px 0 0;
+    }
+
+    .timeline{
+      display:grid;
+      gap:12px;
+      margin-top:24px;
+    }
+
+    .timeline-item{
+      display:grid;
+      grid-template-columns:46px 1fr;
+      gap:12px;
+      align-items:start;
+      padding:14px;
+      border-radius:22px;
+      background:rgba(255,255,255,.055);
+      border:1px solid var(--line);
+    }
+
+    .timeline-item span{
+      width:44px;
+      height:44px;
+      display:grid;
+      place-items:center;
+      border-radius:16px;
+      color:#06101f;
+      background:linear-gradient(135deg,var(--green),var(--cyan));
+      font-weight:900;
+    }
+
+    .timeline-item strong{display:block;margin-bottom:4px}
+    .timeline-item p{margin:0;color:var(--muted);line-height:1.7;font-size:.92rem}
+
+    .wide-phone-preview{
+      min-height:480px;
+      border-radius:34px;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(50,211,255,.18), transparent 28%),
+        linear-gradient(135deg,rgba(255,255,255,.10),rgba(255,255,255,.035));
+      border:1px solid var(--line);
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+      position:relative;
+    }
+
+    .dashboard-mock{
+      width:min(92%, 620px);
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+      transform:rotate(-2deg);
+    }
+
+    .dash-card{
+      padding:18px;
+      border-radius:26px;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.13);
+      backdrop-filter:blur(14px);
+    }
+
+    .dash-card.big{
+      grid-column:span 2;
+      min-height:150px;
+      background:linear-gradient(135deg,rgba(47,107,255,.34),rgba(50,211,255,.14));
+    }
+
+    .dash-card h3{margin:0 0 10px}
+    .dash-card p{margin:0;color:var(--muted);line-height:1.8}
+    .dash-bars{display:grid;gap:8px;margin-top:14px}
+    .dash-bars i{display:block;height:9px;border-radius:999px;background:rgba(255,255,255,.16);overflow:hidden}
+    .dash-bars i::before{content:"";display:block;height:100%;width:var(--w);background:linear-gradient(90deg,var(--green),var(--cyan));border-radius:inherit}
+
+    .cities-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .city-card{
+      padding:18px;
+      border-radius:24px;
+      background:rgba(255,255,255,.065);
+      border:1px solid var(--line);
+      transition:.22s ease;
+    }
+
+    .city-card:hover{
+      transform:translateY(-4px);
+      background:rgba(255,255,255,.09);
+      border-color:rgba(55,245,161,.24);
+    }
+
+    .city-card strong{
+      display:block;
+      margin-bottom:5px;
+      font-size:1.03rem;
+    }
+
+    .city-card span{
+      color:var(--muted);
+      font-size:.88rem;
+    }
+
+    .cta{
+      text-align:center;
+      padding:84px 22px;
+      border-radius:44px;
+      background:
+        radial-gradient(circle at 22% 18%, rgba(55,245,161,.18), transparent 34%),
+        radial-gradient(circle at 80% 32%, rgba(50,211,255,.18), transparent 34%),
+        rgba(255,255,255,.065);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .cta h2{
+      max-width:850px;
+      margin-inline:auto;
+      margin-bottom:16px;
+    }
+
+    .cta p{
+      color:var(--muted);
+      line-height:2;
+      max-width:700px;
+      margin:0 auto 26px;
+    }
+
+    .footer{
+      padding:34px 0 46px;
+      color:var(--muted);
+      text-align:center;
+      font-size:.94rem;
+    }
+
+    .backtop{
+      position:fixed;
+      left:18px;
+      bottom:18px;
+      z-index:900;
+      width:48px;
+      height:48px;
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:rgba(255,255,255,.08);
+      color:white;
+      backdrop-filter:blur(16px);
+      cursor:pointer;
+      opacity:0;
+      pointer-events:none;
+      transform:translateY(12px);
+      transition:.22s ease;
+    }
+
+    .backtop.show{
+      opacity:1;
+      pointer-events:auto;
+      transform:translateY(0);
+    }
+
+    .reveal{
+      opacity:0;
+      transform:translateY(24px);
+      transition:opacity .7s ease, transform .7s cubic-bezier(.2,.8,.2,1);
+    }
+
+    .reveal.in-view{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    .delay-1{transition-delay:.08s}
+    .delay-2{transition-delay:.16s}
+    .delay-3{transition-delay:.24s}
+
+    @media (max-width:1100px){
+      :root{
+        --phone-w:360px;
+        --phone-h:735px;
+      }
+
+      .hero-grid{
+        grid-template-columns:1fr 420px;
+        gap:38px;
+      }
+
+      .float-1{right:-54px}
+      .float-2{left:-46px}
+    }
+
+    @media (max-width:960px){
+      .nav{display:none}
+
+      .hero-grid{
+        grid-template-columns:1fr;
+      }
+
+      .phone-stage{
+        position:relative;
+        top:0;
+        min-height:760px;
+      }
+
+      .feature-grid,
+      .cities-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .demo-box{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width:640px){
+      :root{
+        --phone-w:min(360px, calc(100vw - 28px));
+        --phone-h:735px;
+      }
+
+      .topbar{
+        top:10px;
+        border-radius:24px;
+      }
+
+      .brand span:last-child{display:none}
+      .top-cta{padding:11px 13px;font-size:.88rem}
+
+      .hero{
+        padding-top:108px;
+      }
+
+      h1{
+        letter-spacing:-1.7px;
+      }
+
+      .hero-stats{
+        grid-template-columns:1fr;
+      }
+
+      .phone-stage{
+        min-height:760px;
+      }
+
+      .phone-wrap{
+        transform:none !important;
+      }
+
+      .floating-card{
+        display:none;
+      }
+
+      .section,
+      .demo-section{
+        padding:72px 0;
+      }
+
+      .section-head{
+        display:block;
+      }
+
+      .section-head p{
+        margin-top:14px;
+      }
+
+      .feature-grid,
+      .cities-grid,
+      .dashboard-mock{
+        grid-template-columns:1fr;
+      }
+
+      .dash-card.big{
+        grid-column:auto;
+      }
+
+      .demo-box{
+        padding:14px;
+        border-radius:30px;
+      }
+
+      .demo-copy{
+        padding:10px;
+      }
+
+      .wide-phone-preview{
+        min-height:410px;
+      }
+
+      .phone{
+        border-radius:50px;
+        padding:10px;
+      }
+
+      .screen{
+        border-radius:40px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *,
+      *::before,
+      *::after{
+        animation-duration:.001ms !important;
+        animation-iteration-count:1 !important;
+        scroll-behavior:auto !important;
+        transition-duration:.001ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <a href="#home" class="brand" aria-label="کارکو">
+      <span class="brand-logo">ک</span>
+      <span>
+        <strong>کارکو</strong>
+        <span>کاریابی هوشمند در ایران</span>
+      </span>
+    </a>
+
+    <nav class="nav" aria-label="منوی اصلی">
+      <a href="#home" class="active">خانه</a>
+      <a href="#features">قابلیت‌ها</a>
+      <a href="#demo">دموی اپ</a>
+      <a href="#coverage">پوشش ایران</a>
+      <a href="#contact">شروع</a>
+    </nav>
+
+    <button class="top-cta" type="button" onclick="document.querySelector('#demo').scrollIntoView({behavior:'smooth'})">
+      مشاهده اپ
+    </button>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow reveal"><i class="dot"></i> نمونه‌کار اپلیکیشن موبایل کاریابی</span>
+
+          <h1 class="reveal delay-1">
+            کارکو؛ سریع‌ترین مسیر پیدا کردن
+            <span class="grad">شغل مناسب در سراسر ایران</span>
+          </h1>
+
+          <p class="lead reveal delay-2">
+            کارکو یک اپلیکیشن کاریابی مدرن است؛ با جستجوی هوشمند شغل، پیشنهادهای شخصی‌سازی‌شده، رزومه‌ساز، تحلیل حقوق، نقشه فرصت‌های شغلی ایران و پنل حرفه‌ای برای کارجو و کارفرما.
+          </p>
+
+          <div class="hero-actions reveal delay-3">
+            <a class="btn btn-primary" href="#demo">تست دموی تعاملی</a>
+            <a class="btn" href="#features">دیدن قابلیت‌ها</a>
+          </div>
+
+          <div class="hero-stats reveal delay-3">
+            <div class="stat">
+              <strong data-count="31" data-suffix=" استان">۰</strong>
+              <span>پوشش فعال در ایران</span>
+            </div>
+            <div class="stat">
+              <strong data-count="12000" data-suffix="+">۰</strong>
+              <span>فرصت شغلی قابل نمایش</span>
+            </div>
+            <div class="stat">
+              <strong data-count="86" data-suffix="%">۰</strong>
+              <span>میانگین تطابق هوشمند</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="phone-stage reveal delay-2" aria-label="نمایش اپلیکیشن موبایل کارکو">
+          <div class="phone-wrap" id="phoneWrap">
+            <div class="phone-glow"></div>
+
+            <div class="floating-card float-1">
+              <small>پیشنهاد هوشمند</small>
+              <strong>Front-End Developer</strong>
+              <div class="mini-line"><span></span></div>
+            </div>
+
+            <div class="floating-card float-2">
+              <small>دعوت به مصاحبه</small>
+              <strong>امروز ساعت ۱۸:۳۰</strong>
+              <div class="mini-line"><span style="width:62%"></span></div>
+            </div>
+
+            <div class="phone">
+              <div class="screen">
+                <div class="screen-bg"></div>
+
+                <div class="app">
+                  <div class="statusbar">
+                    <span>۹:۴۱</span>
+                    <div class="status-icons">
+                      <span>●●●</span>
+                      <span>WiFi</span>
+                      <i class="battery"></i>
+                    </div>
+                  </div>
+
+                  <div class="notify" id="notify">
+                    <span>⚡</span>
+                    <div>
+                      <strong>یک فرصت شغلی جدید پیدا شد</strong>
+                      <small>تطابق ۹۲٪ با رزومه شما در تهران</small>
+                    </div>
+                  </div>
+
+                  <div class="app-body">
+                    <section class="app-screen active" data-screen="home">
+                      <div class="app-head">
+                        <div class="hello">
+                          <small>سلام، نیما 👋</small>
+                          <strong>امروز دنبال چه کاری هستی؟</strong>
+                        </div>
+                        <div class="avatar">ن</div>
+                      </div>
+
+                      <div class="searchbox">
+                        <span>🔎</span>
+                        <input id="jobSearch" type="search" placeholder="عنوان شغل، شرکت یا شهر..." />
+                      </div>
+
+                      <div class="quick-row">
+                        <button class="chip active" data-filter="all">همه</button>
+                        <button class="chip" data-filter="remote">دورکاری</button>
+                        <button class="chip" data-filter="tech">تکنولوژی</button>
+                        <button class="chip" data-filter="design">طراحی</button>
+                        <button class="chip" data-filter="sales">فروش</button>
+                      </div>
+
+                      <div class="ai-card">
+                        <small>هوش مصنوعی کارکو</small>
+                        <h3>۸۶٪ تطابق با ۲۴ فرصت شغلی</h3>
+                        <p>براساس مهارت‌ها، سابقه، شهر، حقوق پیشنهادی و سبک کاری شما.</p>
+                        <div class="match-line"><span></span></div>
+                      </div>
+
+                      <div class="section-title-app">
+                        <h3>فرصت‌های پیشنهادی</h3>
+                        <a href="javascript:void(0)">همه</a>
+                      </div>
+
+                      <div class="job-list" id="jobList">
+                        <article class="job-card" data-cat="tech remote" data-title="فرانت اند تهران ریموت">
+                          <div class="company-logo">ک</div>
+                          <div class="job-info">
+                            <h4>توسعه‌دهنده Front-End</h4>
+                            <p>کافه‌تک · تهران / دورکاری</p>
+                            <span class="salary">حقوق ۴۵ تا ۶۵ میلیون</span>
+                          </div>
+                          <button class="save-btn" type="button">♡</button>
+                        </article>
+
+                        <article class="job-card" data-cat="design" data-title="طراح محصول شیراز">
+                          <div class="company-logo logo-purple">پ</div>
+                          <div class="job-info">
+                            <h4>طراح محصول UI/UX</h4>
+                            <p>پیکسل‌نو · شیراز</p>
+                            <span class="salary">حقوق ۳۵ تا ۵۰ میلیون</span>
+                          </div>
+                          <button class="save-btn" type="button">♡</button>
+                        </article>
+
+                        <article class="job-card" data-cat="sales" data-title="مدیر فروش اصفهان">
+                          <div class="company-logo logo-yellow">س</div>
+                          <div class="job-info">
+                            <h4>مدیر فروش منطقه‌ای</h4>
+                            <p>سپهرمارکت · اصفهان</p>
+                            <span class="salary">حقوق توافقی + پورسانت</span>
+                          </div>
+                          <button class="save-btn" type="button">♡</button>
+                        </article>
+
+                        <article class="job-card" data-cat="tech" data-title="برنامه نویس بک اند مشهد">
+                          <div class="company-logo logo-green">ر</div>
+                          <div class="job-info">
+                            <h4>برنامه‌نویس Back-End</h4>
+                            <p>رایان‌ابر · مشهد</p>
+                            <span class="salary">حقوق ۵۰ تا ۷۵ میلیون</span>
+                          </div>
+                          <button class="save-btn" type="button">♡</button>
+                        </article>
+                      </div>
+                    </section>
+
+                    <section class="app-screen" data-screen="search">
+                      <div class="app-head">
+                        <div class="hello">
+                          <small>جستجوی پیشرفته</small>
+                          <strong>فیلترهای حرفه‌ای شغل</strong>
+                        </div>
+                        <div class="avatar">🔎</div>
+                      </div>
+
+                      <div class="feature-mini">
+                        <div class="mini-card">
+                          <div class="mini-icon">🏠</div>
+                          <strong>دورکاری</strong>
+                          <span>فقط فرصت‌های قابل انجام از خانه</span>
+                        </div>
+                        <div class="mini-card">
+                          <div class="mini-icon">💰</div>
+                          <strong>حقوق شفاف</strong>
+                          <span>مرتب‌سازی براساس بازه حقوق</span>
+                        </div>
+                        <div class="mini-card">
+                          <div class="mini-icon">⚡</div>
+                          <strong>استخدام فوری</strong>
+                          <span>شرکت‌هایی با پاسخ سریع</span>
+                        </div>
+                        <div class="mini-card">
+                          <div class="mini-icon">🎓</div>
+                          <strong>بدون سابقه</strong>
+                          <span>مناسب شروع مسیر شغلی</span>
+                        </div>
+                      </div>
+
+                      <div class="section-title-app">
+                        <h3>تحلیل حقوق بازار</h3>
+                        <a href="javascript:void(0)">جزئیات</a>
+                      </div>
+
+                      <div class="analytics">
+                        <div class="ana-card">
+                          <div class="ana-top"><strong>برنامه‌نویسی</strong><span>۷۵M</span></div>
+                          <div class="bar"><span style="--w:86%"></span></div>
+                        </div>
+                        <div class="ana-card">
+                          <div class="ana-top"><strong>طراحی محصول</strong><span>۵۵M</span></div>
+                          <div class="bar"><span style="--w:68%"></span></div>
+                        </div>
+                        <div class="ana-card">
+                          <div class="ana-top"><strong>فروش و بازاریابی</strong><span>۴۸M</span></div>
+                          <div class="bar"><span style="--w:58%"></span></div>
+                        </div>
+                        <div class="ana-card">
+                          <div class="ana-top"><strong>مالی و حسابداری</strong><span>۴۲M</span></div>
+                          <div class="bar"><span style="--w:50%"></span></div>
+                        </div>
+                      </div>
+
+                      <div class="ai-card">
+                        <small>رزومه‌ساز سریع</small>
+                        <h3>رزومه استاندارد ATS بساز</h3>
+                        <p>کارکو رزومه شما را برای سیستم‌های استخدامی شرکت‌ها بهینه می‌کند.</p>
+                        <div class="match-line"><span style="width:92%"></span></div>
+                      </div>
+                    </section>
+
+                    <section class="app-screen" data-screen="map">
+                      <div class="app-head">
+                        <div class="hello">
+                          <small>پوشش سراسری</small>
+                          <strong>فرصت‌ها روی نقشه ایران</strong>
+                        </div>
+                        <div class="avatar">📍</div>
+                      </div>
+
+                      <div class="map-card">
+                        <div class="map-title">
+                          <h3>کاریابی در تمام ایران</h3>
+                          <p>تهران، مشهد، اصفهان، شیراز، تبریز و شهرهای فعال دیگر</p>
+                        </div>
+
+                        <div class="iran-map">
+                          <div class="iran-shape"></div>
+                          <i class="pin p1" data-city="تهران"></i>
+                          <i class="pin p2" data-city="اصفهان"></i>
+                          <i class="pin p3" data-city="تبریز"></i>
+                          <i class="pin p4" data-city="مشهد"></i>
+                          <i class="pin p5" data-city="شیراز"></i>
+                        </div>
+                      </div>
+
+                      <div class="job-list">
+                        <article class="job-card">
+                          <div class="company-logo logo-green">ش</div>
+                          <div class="job-info">
+                            <h4>شهرهای با رشد بالا</h4>
+                            <p>تهران، کرج، مشهد، اصفهان</p>
+                            <span class="salary">رشد ۲۸٪ فرصت شغلی</span>
+                          </div>
+                          <button class="save-btn" type="button">↗</button>
+                        </article>
+
+                        <article class="job-card">
+                          <div class="company-logo logo-purple">د</div>
+                          <div class="job-info">
+                            <h4>دورکاری سراسری</h4>
+                            <p>قابل انجام از تمام استان‌ها</p>
+                            <span class="salary">۳۲۰۰ فرصت فعال</span>
+                          </div>
+                          <button class="save-btn" type="button">↗</button>
+                        </article>
+
+                        <article class="job-card">
+                          <div class="company-logo logo-yellow">ف</div>
+                          <div class="job-info">
+                            <h4>فرصت‌های فوری</h4>
+                            <p>شرکت‌های دارای پاسخ زیر ۲۴ ساعت</p>
+                            <span class="salary">۱۱۰۰ آگهی فوری</span>
+                          </div>
+                          <button class="save-btn" type="button">↗</button>
+                        </article>
+                      </div>
+                    </section>
+
+                    <section class="app-screen" data-screen="profile">
+                      <div class="app-head">
+                        <div class="hello">
+                          <small>پروفایل کارجو</small>
+                          <strong>داشبورد مسیر استخدام</strong>
+                        </div>
+                        <div class="avatar">ن</div>
+                      </div>
+
+                      <div class="profile-card">
+                        <div class="profile-row">
+                          <div class="avatar">ن</div>
+                          <div>
+                            <h3>نیما احمدی</h3>
+                            <p>Front-End Developer · تهران</p>
+                          </div>
+                        </div>
+
+                        <div class="progress-ring">
+                          <div>
+                            <strong>قدرت رزومه شما عالی است</strong>
+                            <p style="margin:7px 0 0;color:rgba(255,255,255,.65);line-height:1.7;font-size:.86rem">
+                              با اضافه کردن نمونه‌کار، شانس دعوت به مصاحبه بیشتر می‌شود.
+                            </p>
+                          </div>
+                          <div class="ring"><span>۸۲٪</span></div>
+                        </div>
+                      </div>
+
+                      <div class="task-list">
+                        <div class="task">
+                          <span class="check">✓</span>
+                          <div>
+                            <strong>رزومه تکمیل شد</strong>
+                            <span>آخرین ویرایش امروز</span>
+                          </div>
+                        </div>
+
+                        <div class="task">
+                          <span class="check">✓</span>
+                          <div>
+                            <strong>۵ درخواست فعال</strong>
+                            <span>۲ مورد در مرحله مصاحبه</span>
+                          </div>
+                        </div>
+
+                        <div class="task">
+                          <span class="check">!</span>
+                          <div>
+                            <strong>تمرین مصاحبه ویدیویی</strong>
+                            <span>پیشنهاد شده برای افزایش آمادگی</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="section-title-app">
+                        <h3>فعالیت اخیر</h3>
+                        <a href="javascript:void(0)">همه</a>
+                      </div>
+
+                      <div class="job-list">
+                        <article class="job-card">
+                          <div class="company-logo">ا</div>
+                          <div class="job-info">
+                            <h4>دعوت به مصاحبه</h4>
+                            <p>ابرینو · سه‌شنبه ساعت ۱۱</p>
+                            <span class="salary">آنلاین</span>
+                          </div>
+                          <button class="save-btn" type="button">✓</button>
+                        </article>
+                      </div>
+                    </section>
+                  </div>
+
+                  <nav class="bottom-nav" aria-label="ناوبری اپلیکیشن">
+                    <button class="tab-btn active" type="button" data-target="home"><b>⌂</b>خانه</button>
+                    <button class="tab-btn" type="button" data-target="search"><b>⌕</b>جستجو</button>
+                    <button class="tab-btn" type="button" data-target="map"><b>⌖</b>ایران</button>
+                    <button class="tab-btn" type="button" data-target="profile"><b>◉</b>پروفایل</button>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>استخدام در تهران</span>
+        <span>دورکاری از سراسر ایران</span>
+        <span>رزومه‌ساز هوشمند</span>
+        <span>تحلیل حقوق بازار</span>
+        <span>مصاحبه ویدیویی</span>
+        <span>فرصت‌های فوری</span>
+        <span>استخدام در مشهد</span>
+        <span>استخدام در شیراز</span>
+        <span>استخدام در تبریز</span>
+        <span>استخدام در اصفهان</span>
+        <span>دورکاری از سراسر ایران</span>
+        <span>رزومه‌ساز هوشمند</span>
+      </div>
+    </div>
+
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <span class="kicker">قابلیت‌های موبایلی کارکو</span>
+            <h2>یک اپ کامل برای کارجو، کارفرما و آینده شغلی</h2>
+          </div>
+          <p>
+            کارکو فقط لیست آگهی نیست؛ یک تجربه موبایلی هوشمند است که کارجو را از ساخت رزومه تا مصاحبه و استخدام همراهی می‌کند.
+          </p>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature-card reveal">
+            <div class="feature-icon">🤖</div>
+            <h3>مچینگ هوشمند شغل</h3>
+            <p>پیشنهاد فرصت‌های شغلی براساس مهارت‌ها، شهر، سابقه، حقوق مورد انتظار و سبک کاری کارجو.</p>
+          </article>
+
+          <article class="feature-card reveal delay-1">
+            <div class="feature-icon">📄</div>
+            <h3>رزومه‌ساز ATS</h3>
+            <p>ساخت رزومه استاندارد، تحلیل ضعف‌ها و بهینه‌سازی برای سیستم‌های استخدامی شرکت‌ها.</p>
+          </article>
+
+          <article class="feature-card reveal delay-2">
+            <div class="feature-icon">📍</div>
+            <h3>نقشه شغلی ایران</h3>
+            <p>نمایش تمرکز فرصت‌های شغلی در استان‌ها و شهرهای مختلف با امکان فیلتر دورکاری.</p>
+          </article>
+
+          <article class="feature-card reveal">
+            <div class="feature-icon">🎥</div>
+            <h3>مصاحبه ویدیویی</h3>
+            <p>ارسال پاسخ ویدیویی اولیه، تمرین سوالات مصاحبه و کاهش زمان هماهنگی با کارفرما.</p>
+          </article>
+
+          <article class="feature-card reveal delay-1">
+            <div class="feature-icon">💰</div>
+            <h3>تحلیل حقوق بازار</h3>
+            <p>مقایسه بازه حقوقی مشاغل مختلف براساس شهر، سطح تجربه و حوزه کاری.</p>
+          </article>
+
+          <article class="feature-card reveal delay-2">
+            <div class="feature-icon">⚡</div>
+            <h3>درخواست سریع</h3>
+            <p>ارسال رزومه با یک لمس، ذخیره فرصت‌ها، پیگیری وضعیت درخواست و دریافت اعلان فوری.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="demo-section" id="demo">
+      <div class="container">
+        <div class="demo-box reveal">
+          <div class="demo-copy">
+            <span class="kicker">دموی محصول</span>
+            <h2>اپلیکیشن داخل موبایل، درست مثل یک نمونه‌کار واقعی</h2>
+            <p>
+              در نسخه دسکتاپ، اپ کارکو داخل یک موبایل نمایش داده می‌شود. از نوار پایین گوشی استفاده کن، بین صفحه‌های خانه، جستجو، نقشه ایران و پروفایل جابه‌جا شو و حس واقعی یک اپ کاریابی حرفه‌ای را ببین.
+            </p>
+
+            <div class="timeline">
+              <div class="timeline-item">
+                <span>۱</span>
+                <div>
+                  <strong>جستجوی سریع و فیلتر شغل</strong>
+                  <p>کارجو با چند لمس به فرصت‌های متناسب با خودش می‌رسد.</p>
+                </div>
+              </div>
+
+              <div class="timeline-item">
+                <span>۲</span>
+                <div>
+                  <strong>تحلیل و پیشنهاد هوشمند</strong>
+                  <p>اپ براساس رزومه، بهترین آگهی‌ها را اولویت‌بندی می‌کند.</p>
+                </div>
+              </div>
+
+              <div class="timeline-item">
+                <span>۳</span>
+                <div>
+                  <strong>پیگیری مسیر استخدام</strong>
+                  <p>از ارسال رزومه تا دعوت به مصاحبه، همه چیز داخل پروفایل قابل مشاهده است.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="wide-phone-preview">
+            <div class="dashboard-mock">
+              <div class="dash-card big">
+                <h3>داشبورد کارفرما</h3>
+                <p>مدیریت آگهی‌ها، بررسی رزومه‌ها، امتیاز تطابق و دعوت سریع به مصاحبه.</p>
+                <div class="dash-bars">
+                  <i style="--w:86%"></i>
+                  <i style="--w:64%"></i>
+                  <i style="--w:74%"></i>
+                </div>
+              </div>
+              <div class="dash-card">
+                <h3>۳۲۱</h3>
+                <p>رزومه جدید</p>
+              </div>
+              <div class="dash-card">
+                <h3>۹۲٪</h3>
+                <p>تطابق برتر</p>
+              </div>
+              <div class="dash-card">
+                <h3>۲۴h</h3>
+                <p>میانگین پاسخ</p>
+              </div>
+              <div class="dash-card">
+                <h3>۳۱ استان</h3>
+                <p>پوشش فعال</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="coverage">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <span class="kicker">پوشش سراسر کشور</span>
+            <h2>کاریابی از تهران تا کوچک‌ترین شهرهای ایران</h2>
+          </div>
+          <p>
+            کارکو برای بازار کار ایران طراحی شده؛ امکان جستجو در استان‌ها، شهرها، فرصت‌های حضوری، هیبرید و دورکاری سراسری.
+          </p>
+        </div>
+
+        <div class="cities-grid">
+          <div class="city-card reveal"><strong>تهران</strong><span>تکنولوژی، فروش، مالی، مارکتینگ</span></div>
+          <div class="city-card reveal delay-1"><strong>مشهد</strong><span>فروش، گردشگری، پشتیبانی، IT</span></div>
+          <div class="city-card reveal delay-2"><strong>اصفهان</strong><span>صنعت، مهندسی، طراحی، تولید</span></div>
+          <div class="city-card reveal delay-3"><strong>شیراز</strong><span>درمان، آموزش، طراحی، فروش</span></div>
+          <div class="city-card reveal"><strong>تبریز</strong><span>بازرگانی، تولید، مهندسی، صادرات</span></div>
+          <div class="city-card reveal delay-1"><strong>کرج</strong><span>تولید، لجستیک، پشتیبانی، IT</span></div>
+          <div class="city-card reveal delay-2"><strong>رشت</strong><span>خدمات، فروش، گردشگری، محتوا</span></div>
+          <div class="city-card reveal delay-3"><strong>دورکاری</strong><span>قابل انجام از تمام استان‌های ایران</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="cta reveal">
+          <h2>ایده اپلیکیشن خود را همین حالا واقعی کن ، تنها یک تماس فاصله است</h2>
+          <p>
+            این صفحه به شکل یک لندینگ حرفه‌ای برای معرفی اپ موبایل طراحی شده؛ با گوشی تعاملی، صفحات داخلی اپ، فیلتر شغل، نقشه ایران، رزومه‌ساز و تجربه کاملاً ریسپانسیو.
+          </p>
+          <a class="btn btn-primary" href="#home">بازگشت به بالا</a>
+          <a class="btn" href="#features">مرور قابلیت‌ها</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      © <span id="year"></span> کارکو — نمونه‌کار اپلیکیشن موبایل استخدام و کاریابی ساخته شده توسط محمد علی اسکاش
+    </div>
+  </footer>
+
+  <button class="backtop" id="backtop" type="button" aria-label="بازگشت به بالا">↑</button>
+
+  <script>
+    (() => {
+      const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const nf = new Intl.NumberFormat("fa-IR");
+      const clamp = (v,min,max) => Math.min(Math.max(v,min),max);
+
+      document.getElementById("year").textContent =
+        new Intl.NumberFormat("fa-IR", { useGrouping:false }).format(new Date().getFullYear());
+
+      document.querySelectorAll(".btn").forEach(btn => {
+        btn.addEventListener("pointermove", e => {
+          const r = btn.getBoundingClientRect();
+          btn.style.setProperty("--x", `${e.clientX - r.left}px`);
+          btn.style.setProperty("--y", `${e.clientY - r.top}px`);
+        }, { passive:true });
+      });
+
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if(entry.isIntersecting){
+            entry.target.classList.add("in-view");
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold:.13, rootMargin:"0px 0px -50px 0px" });
+
+      document.querySelectorAll(".reveal").forEach(el => revealObserver.observe(el));
+
+      const backtop = document.getElementById("backtop");
+      const navLinks = [...document.querySelectorAll(".nav a")];
+      const sections = navLinks.map(a => document.querySelector(a.getAttribute("href"))).filter(Boolean);
+
+      function onScroll(){
+        backtop.classList.toggle("show", window.scrollY > 760);
+      }
+
+      onScroll();
+      window.addEventListener("scroll", onScroll, { passive:true });
+
+      backtop.addEventListener("click", () => {
+        window.scrollTo({ top:0, behavior:prefersReduced ? "auto" : "smooth" });
+      });
+
+      const navObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if(!entry.isIntersecting) return;
+          navLinks.forEach(link => {
+            link.classList.toggle("active", link.getAttribute("href") === `#${entry.target.id}`);
+          });
+        });
+      }, { threshold:.35, rootMargin:"-100px 0px -52% 0px" });
+
+      sections.forEach(section => navObserver.observe(section));
+
+      const countObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if(!entry.isIntersecting) return;
+
+          const el = entry.target;
+          const target = Number(el.dataset.count);
+          const suffix = el.dataset.suffix || "";
+          const start = performance.now();
+          const duration = 1200;
+
+          function tick(now){
+            const t = clamp((now - start) / duration, 0, 1);
+            const eased = 1 - Math.pow(1 - t, 3);
+            el.textContent = nf.format(Math.floor(target * eased)) + suffix;
+            if(t < 1) requestAnimationFrame(tick);
+          }
+
+          requestAnimationFrame(tick);
+          countObserver.unobserve(el);
+        });
+      }, { threshold:.6 });
+
+      document.querySelectorAll("[data-count]").forEach(el => countObserver.observe(el));
+
+      const tabButtons = document.querySelectorAll(".tab-btn");
+      const appScreens = document.querySelectorAll(".app-screen");
+      const notify = document.getElementById("notify");
+
+      function showNotify(){
+        notify.classList.add("show");
+        clearTimeout(showNotify.t);
+        showNotify.t = setTimeout(() => notify.classList.remove("show"), 2600);
+      }
+
+      tabButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const target = btn.dataset.target;
+
+          tabButtons.forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          appScreens.forEach(screen => {
+            screen.classList.toggle("active", screen.dataset.screen === target);
+          });
+
+          if(target === "home" || target === "map") showNotify();
+        });
+      });
+
+      setTimeout(showNotify, 1700);
+
+      document.querySelectorAll(".save-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          if(btn.textContent.trim() === "↗" || btn.textContent.trim() === "✓") return;
+          btn.classList.toggle("active");
+          btn.textContent = btn.classList.contains("active") ? "♥" : "♡";
+        });
+      });
+
+      const chips = document.querySelectorAll(".chip");
+      const jobCards = document.querySelectorAll("#jobList .job-card");
+      const jobSearch = document.getElementById("jobSearch");
+      let activeFilter = "all";
+
+      function filterJobs(){
+        const q = (jobSearch.value || "").trim().toLowerCase();
+
+        jobCards.forEach((card, index) => {
+          const cat = card.dataset.cat || "";
+          const title = (card.dataset.title || "").toLowerCase();
+          const passFilter = activeFilter === "all" || cat.includes(activeFilter);
+          const passSearch = !q || title.includes(q);
+
+          card.style.display = passFilter && passSearch ? "grid" : "none";
+
+          if(passFilter && passSearch && !prefersReduced){
+            card.animate([
+              { opacity:0, transform:"translateY(8px) scale(.98)" },
+              { opacity:1, transform:"translateY(0) scale(1)" }
+            ], {
+              duration:260,
+              delay:index * 35,
+              easing:"cubic-bezier(.2,.8,.2,1)"
+            });
+          }
+        });
+      }
+
+      chips.forEach(chip => {
+        chip.addEventListener("click", () => {
+          chips.forEach(c => c.classList.remove("active"));
+          chip.classList.add("active");
+          activeFilter = chip.dataset.filter;
+          filterJobs();
+        });
+      });
+
+      jobSearch.addEventListener("input", filterJobs);
+
+      const finePointer = window.matchMedia("(pointer: fine)").matches;
+      const phoneWrap = document.getElementById("phoneWrap");
+
+      if(finePointer && !prefersReduced && phoneWrap){
+        document.addEventListener("pointermove", e => {
+          const rect = phoneWrap.getBoundingClientRect();
+          const cx = rect.left + rect.width / 2;
+          const cy = rect.top + rect.height / 2;
+          const dx = clamp((e.clientX - cx) / rect.width, -1, 1);
+          const dy = clamp((e.clientY - cy) / rect.height, -1, 1);
+
+          phoneWrap.style.transform =
+            `rotateY(${dx * -8}deg) rotateX(${dy * 6}deg) translateY(-4px)`;
+        }, { passive:true });
+
+        document.querySelectorAll(".feature-card").forEach(card => {
+          card.addEventListener("pointermove", e => {
+            const r = card.getBoundingClientRect();
+            const px = (e.clientX - r.left) / r.width;
+            const py = (e.clientY - r.top) / r.height;
+            card.style.setProperty("--mx", `${px * 100}%`);
+            card.style.setProperty("--my", `${py * 100}%`);
+          }, { passive:true });
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

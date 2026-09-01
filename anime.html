@@ -1,0 +1,1988 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#090914" />
+  <meta name="description" content="یک لندینگ تک‌صفحه‌ای خفن و تعاملی درباره دنیای انیمه با افکت‌های اسکرول، هاور، پارالاکس و تصاویر CDN." />
+  <title>Neon Otaku | دنیای انیمه</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;700;800;900&display=swap');
+
+    :root{
+      --bg:#060713;
+      --bg2:#0b0b1d;
+      --text:#f8f7ff;
+      --muted:#b9b8d9;
+      --pink:#ff3cac;
+      --purple:#784ba0;
+      --blue:#2b86c5;
+      --cyan:#00f5ff;
+      --yellow:#ffe66d;
+      --green:#7CFFCB;
+      --glass:rgba(255,255,255,.075);
+      --glass2:rgba(255,255,255,.12);
+      --line:rgba(255,255,255,.16);
+      --shadow:0 24px 90px rgba(0,0,0,.42);
+      --radius:28px;
+      --scroll:0%;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:"Vazirmatn",system-ui,-apple-system,Segoe UI,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 80% 5%, rgba(255,60,172,.23), transparent 35%),
+        radial-gradient(circle at 10% 30%, rgba(0,245,255,.14), transparent 35%),
+        radial-gradient(circle at 50% 90%, rgba(120,75,160,.25), transparent 40%),
+        linear-gradient(180deg,var(--bg),var(--bg2) 45%,#05050d);
+      overflow-x:hidden;
+      min-height:100vh;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:-3;
+      pointer-events:none;
+      background-image:
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size:54px 54px;
+      mask-image:radial-gradient(circle at center, black 0 45%, transparent 80%);
+    }
+
+    body::after{
+      content:"";
+      position:fixed;
+      inset:-30%;
+      z-index:-4;
+      pointer-events:none;
+      background:conic-gradient(from 180deg, rgba(255,60,172,.13), rgba(43,134,197,.12), rgba(124,255,203,.08), rgba(255,60,172,.13));
+      filter:blur(80px);
+      animation:aurora 18s linear infinite;
+      opacity:.75;
+    }
+
+    @keyframes aurora{
+      to{transform:rotate(1turn)}
+    }
+
+    ::selection{
+      background:var(--pink);
+      color:white;
+    }
+
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+
+    .container{
+      width:min(1180px, calc(100% - 36px));
+      margin-inline:auto;
+    }
+
+    .loader{
+      position:fixed;
+      inset:0;
+      z-index:9999;
+      display:grid;
+      place-items:center;
+      background:#05050d;
+      transition:opacity .55s ease, visibility .55s ease;
+    }
+
+    .loader.hide{
+      opacity:0;
+      visibility:hidden;
+    }
+
+    .loader-core{
+      width:86px;
+      height:86px;
+      border-radius:50%;
+      position:relative;
+      background:conic-gradient(var(--pink), var(--cyan), var(--yellow), var(--pink));
+      animation:spin 1s linear infinite;
+      box-shadow:0 0 45px rgba(255,60,172,.35);
+    }
+
+    .loader-core::after{
+      content:"";
+      position:absolute;
+      inset:10px;
+      border-radius:50%;
+      background:#05050d;
+      box-shadow:inset 0 0 25px rgba(255,255,255,.08);
+    }
+
+    @keyframes spin{to{transform:rotate(1turn)}}
+
+    .progress{
+      position:fixed;
+      top:0;
+      right:0;
+      left:0;
+      height:4px;
+      z-index:1000;
+      background:rgba(255,255,255,.06);
+    }
+
+    .progress .bar{
+      height:100%;
+      transform-origin:right;
+      transform:scaleX(0);
+      background:linear-gradient(90deg,var(--cyan),var(--pink),var(--yellow));
+      box-shadow:0 0 22px rgba(0,245,255,.55);
+    }
+
+    #fxCanvas{
+      position:fixed;
+      inset:0;
+      z-index:-1;
+      pointer-events:none;
+      opacity:.75;
+    }
+
+    .cursor, .cursor-dot{
+      position:fixed;
+      pointer-events:none;
+      z-index:9998;
+      opacity:0;
+      transform:translate(-50%,-50%);
+    }
+
+    .has-cursor .cursor, .has-cursor .cursor-dot{opacity:1}
+
+    .cursor{
+      width:38px;
+      height:38px;
+      border:1px solid rgba(0,245,255,.7);
+      border-radius:50%;
+      transition:width .2s ease,height .2s ease,border-color .2s ease,background .2s ease;
+      mix-blend-mode:screen;
+    }
+
+    .cursor-dot{
+      width:7px;
+      height:7px;
+      border-radius:50%;
+      background:var(--pink);
+      box-shadow:0 0 16px var(--pink);
+    }
+
+    .cursor.hover{
+      width:62px;
+      height:62px;
+      background:rgba(255,60,172,.09);
+      border-color:rgba(255,60,172,.9);
+    }
+
+    .topbar{
+      position:fixed;
+      top:16px;
+      right:50%;
+      transform:translateX(50%);
+      z-index:900;
+      width:min(1180px, calc(100% - 28px));
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:12px 14px;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      background:rgba(8,8,24,.56);
+      backdrop-filter:blur(18px);
+      box-shadow:0 18px 60px rgba(0,0,0,.25);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:900;
+      letter-spacing:-.5px;
+      white-space:nowrap;
+    }
+
+    .brand-logo{
+      width:38px;
+      height:38px;
+      display:grid;
+      place-items:center;
+      border-radius:14px;
+      background:linear-gradient(135deg,var(--pink),var(--cyan));
+      box-shadow:0 0 30px rgba(255,60,172,.35);
+    }
+
+    .nav{
+      display:flex;
+      align-items:center;
+      gap:4px;
+    }
+
+    .nav a{
+      color:var(--muted);
+      font-size:.92rem;
+      padding:9px 13px;
+      border-radius:999px;
+      transition:.25s ease;
+    }
+
+    .nav a:hover,
+    .nav a.active{
+      color:white;
+      background:rgba(255,255,255,.11);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+    }
+
+    .nav-cta{
+      border:0;
+      color:white;
+      cursor:pointer;
+      font-family:inherit;
+      font-weight:800;
+      padding:11px 16px;
+      border-radius:999px;
+      background:linear-gradient(135deg,var(--pink),var(--purple),var(--blue));
+      box-shadow:0 12px 30px rgba(255,60,172,.22);
+    }
+
+    .hero{
+      min-height:100svh;
+      display:grid;
+      align-items:center;
+      padding:130px 0 70px;
+      position:relative;
+      isolation:isolate;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.02fr .98fr;
+      gap:44px;
+      align-items:center;
+    }
+
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      color:#dffcff;
+      font-size:.93rem;
+      padding:8px 13px;
+      border-radius:999px;
+      background:rgba(0,245,255,.09);
+      border:1px solid rgba(0,245,255,.19);
+      box-shadow:0 0 30px rgba(0,245,255,.08);
+    }
+
+    .pulse{
+      width:9px;
+      height:9px;
+      border-radius:50%;
+      background:var(--green);
+      box-shadow:0 0 0 0 rgba(124,255,203,.75);
+      animation:pulse 1.8s infinite;
+    }
+
+    @keyframes pulse{
+      70%{box-shadow:0 0 0 12px rgba(124,255,203,0)}
+      100%{box-shadow:0 0 0 0 rgba(124,255,203,0)}
+    }
+
+    h1{
+      margin:18px 0 16px;
+      font-size:clamp(2.55rem, 7vw, 6.9rem);
+      line-height:1.03;
+      letter-spacing:-3.5px;
+    }
+
+    .grad-text{
+      background:linear-gradient(90deg,#fff,var(--cyan),var(--pink),var(--yellow));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      background-size:240%;
+      animation:gradientShift 5s ease-in-out infinite alternate;
+    }
+
+    @keyframes gradientShift{
+      to{background-position:100%}
+    }
+
+    .hero p{
+      color:var(--muted);
+      font-size:clamp(1rem, 1.6vw, 1.18rem);
+      line-height:2;
+      max-width:640px;
+      margin:0 0 28px;
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:13px;
+      margin-bottom:30px;
+    }
+
+    .btn{
+      position:relative;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:18px;
+      padding:14px 20px;
+      font-family:inherit;
+      font-weight:900;
+      cursor:pointer;
+      color:white;
+      background:rgba(255,255,255,.08);
+      backdrop-filter:blur(10px);
+      transition:transform .25s ease, border-color .25s ease, background .25s ease;
+    }
+
+    .btn::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:radial-gradient(circle at var(--x,50%) var(--y,50%), rgba(255,255,255,.32), transparent 32%);
+      opacity:0;
+      transition:opacity .25s;
+    }
+
+    .btn:hover{
+      transform:translateY(-3px);
+      border-color:rgba(0,245,255,.38);
+      background:rgba(255,255,255,.12);
+    }
+
+    .btn:hover::before{opacity:1}
+
+    .btn-primary{
+      border:0;
+      background:linear-gradient(135deg,var(--pink),var(--purple),var(--blue));
+      box-shadow:0 18px 45px rgba(255,60,172,.24);
+    }
+
+    .mini-stats{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+      gap:12px;
+      max-width:620px;
+    }
+
+    .stat{
+      padding:16px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:22px;
+      background:rgba(255,255,255,.06);
+      backdrop-filter:blur(12px);
+    }
+
+    .stat strong{
+      display:block;
+      font-size:1.55rem;
+      color:white;
+    }
+
+    .stat span{
+      color:var(--muted);
+      font-size:.88rem;
+    }
+
+    .hero-art{
+      position:relative;
+      min-height:620px;
+      perspective:1200px;
+    }
+
+    .moon{
+      position:absolute;
+      top:4%;
+      left:5%;
+      width:150px;
+      height:150px;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 35% 35%, #fff 0 9%, transparent 10%),
+        radial-gradient(circle at 65% 45%, rgba(0,0,0,.12) 0 11%, transparent 12%),
+        linear-gradient(135deg,#fff4b0,#ffd1f4 55%,#9aefff);
+      box-shadow:0 0 75px rgba(255,230,109,.3);
+      animation:float 5.5s ease-in-out infinite;
+    }
+
+    .deck{
+      position:absolute;
+      inset:70px 20px 20px;
+      transform-style:preserve-3d;
+      animation:deckFloat 6.5s ease-in-out infinite;
+    }
+
+    .poster{
+      position:absolute;
+      width:58%;
+      height:440px;
+      border-radius:34px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow:var(--shadow);
+      background:#111;
+      transform-style:preserve-3d;
+      transition:transform .35s ease, filter .35s ease;
+    }
+
+    .poster img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      filter:saturate(1.2) contrast(1.05);
+    }
+
+    .poster::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(180deg, transparent 35%, rgba(0,0,0,.72)),
+        radial-gradient(circle at 25% 15%, rgba(255,255,255,.24), transparent 28%);
+    }
+
+    .poster b{
+      position:absolute;
+      right:22px;
+      bottom:22px;
+      z-index:2;
+      font-size:1.15rem;
+    }
+
+    .poster small{
+      position:absolute;
+      right:22px;
+      bottom:52px;
+      z-index:2;
+      color:#dffcff;
+      letter-spacing:2px;
+      text-transform:uppercase;
+    }
+
+    .poster.p1{
+      right:12%;
+      top:10px;
+      transform:rotateY(-15deg) rotateZ(6deg) translateZ(60px);
+    }
+    .poster.p2{
+      left:4%;
+      top:90px;
+      transform:rotateY(18deg) rotateZ(-7deg) translateZ(20px);
+      opacity:.94;
+    }
+    .poster.p3{
+      right:28%;
+      top:190px;
+      transform:rotateY(-8deg) rotateZ(-3deg) translateZ(100px);
+      width:52%;
+      height:370px;
+    }
+
+    .poster:hover{
+      filter:brightness(1.1);
+      transform:translateY(-12px) rotateZ(0) translateZ(120px) !important;
+    }
+
+    .energy{
+      position:absolute;
+      inset:auto 5% 7% auto;
+      width:170px;
+      height:170px;
+      border-radius:42px;
+      background:linear-gradient(135deg, rgba(255,60,172,.95), rgba(0,245,255,.95));
+      box-shadow:0 0 70px rgba(0,245,255,.25);
+      display:grid;
+      place-items:center;
+      font-size:4.2rem;
+      transform:rotate(12deg);
+      animation:float 4s ease-in-out infinite reverse;
+    }
+
+    @keyframes float{
+      50%{transform:translateY(-18px) rotate(8deg)}
+    }
+
+    @keyframes deckFloat{
+      50%{transform:translateY(-16px) rotateX(2deg) rotateY(-2deg)}
+    }
+
+    .scroll-cue{
+      position:absolute;
+      bottom:18px;
+      right:50%;
+      transform:translateX(50%);
+      display:grid;
+      justify-items:center;
+      gap:8px;
+      color:var(--muted);
+      font-size:.83rem;
+    }
+
+    .mouse{
+      width:26px;
+      height:42px;
+      border:1px solid rgba(255,255,255,.34);
+      border-radius:999px;
+      position:relative;
+    }
+
+    .mouse::before{
+      content:"";
+      position:absolute;
+      top:8px;
+      right:50%;
+      width:4px;
+      height:8px;
+      border-radius:999px;
+      background:var(--cyan);
+      transform:translateX(50%);
+      animation:wheel 1.25s infinite;
+    }
+
+    @keyframes wheel{
+      to{opacity:0; transform:translate(50%, 14px)}
+    }
+
+    .marquee{
+      overflow:hidden;
+      border-block:1px solid rgba(255,255,255,.1);
+      background:rgba(255,255,255,.035);
+      backdrop-filter:blur(12px);
+    }
+
+    .marquee-track{
+      display:flex;
+      gap:42px;
+      width:max-content;
+      padding:16px 0;
+      animation:marquee 23s linear infinite;
+      color:#eafcff;
+      font-weight:800;
+    }
+
+    .marquee span{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      white-space:nowrap;
+      opacity:.9;
+    }
+
+    @keyframes marquee{
+      to{transform:translateX(50%)}
+    }
+
+    .section{
+      padding:105px 0;
+      position:relative;
+    }
+
+    .section-head{
+      display:flex;
+      align-items:end;
+      justify-content:space-between;
+      gap:24px;
+      margin-bottom:34px;
+    }
+
+    .eyebrow{
+      color:var(--cyan);
+      font-weight:900;
+      letter-spacing:1px;
+      margin-bottom:8px;
+      display:block;
+    }
+
+    h2{
+      margin:0;
+      font-size:clamp(2rem, 4vw, 4rem);
+      line-height:1.2;
+      letter-spacing:-1.8px;
+    }
+
+    .section-head p{
+      color:var(--muted);
+      line-height:2;
+      max-width:470px;
+      margin:0;
+    }
+
+    .genre-grid{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0,1fr));
+      gap:16px;
+    }
+
+    .glass-card{
+      position:relative;
+      overflow:hidden;
+      min-height:260px;
+      padding:24px;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:var(--radius);
+      background:
+        radial-gradient(circle at var(--mx,50%) var(--my,0%), rgba(255,255,255,.16), transparent 34%),
+        rgba(255,255,255,.065);
+      backdrop-filter:blur(16px);
+      box-shadow:0 18px 55px rgba(0,0,0,.2);
+      transform-style:preserve-3d;
+      transition:border-color .3s ease, background .3s ease, box-shadow .3s ease;
+    }
+
+    .glass-card::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:linear-gradient(135deg, transparent, rgba(0,245,255,.42), rgba(255,60,172,.38), transparent);
+      opacity:0;
+      transition:opacity .3s;
+      z-index:-1;
+    }
+
+    .glass-card:hover{
+      border-color:rgba(0,245,255,.35);
+      box-shadow:0 28px 90px rgba(0,245,255,.08);
+    }
+
+    .glass-card:hover::before{opacity:.55}
+
+    .genre-icon{
+      width:64px;
+      height:64px;
+      display:grid;
+      place-items:center;
+      font-size:2rem;
+      border-radius:22px;
+      background:linear-gradient(135deg, rgba(255,60,172,.28), rgba(0,245,255,.20));
+      margin-bottom:22px;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.13);
+    }
+
+    .glass-card h3{
+      margin:0 0 10px;
+      font-size:1.45rem;
+    }
+
+    .glass-card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.9;
+      font-size:.97rem;
+    }
+
+    .tag-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:20px;
+    }
+
+    .tag{
+      color:#eafcff;
+      font-size:.78rem;
+      border:1px solid rgba(255,255,255,.13);
+      background:rgba(255,255,255,.07);
+      padding:6px 10px;
+      border-radius:999px;
+    }
+
+    .filters{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-bottom:20px;
+    }
+
+    .filter-btn{
+      color:var(--muted);
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:999px;
+      padding:10px 15px;
+      font-family:inherit;
+      cursor:pointer;
+      transition:.25s;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active{
+      color:white;
+      background:linear-gradient(135deg, rgba(255,60,172,.42), rgba(0,245,255,.22));
+      border-color:rgba(0,245,255,.28);
+    }
+
+    .showcase-grid{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:18px;
+    }
+
+    .anime-card{
+      position:relative;
+      height:430px;
+      border-radius:30px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.14);
+      background:#111;
+      box-shadow:0 20px 70px rgba(0,0,0,.28);
+      isolation:isolate;
+      transform:translateZ(0);
+    }
+
+    .anime-card.filtered-out{display:none}
+
+    .anime-card img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      transform:scale(1.02);
+      filter:saturate(1.12) contrast(1.04);
+      transition:transform .7s cubic-bezier(.2,.8,.2,1), filter .7s ease;
+    }
+
+    .anime-card:hover img{
+      transform:scale(1.13) rotate(.7deg);
+      filter:saturate(1.35) contrast(1.12);
+    }
+
+    .anime-card::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:1;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.06), rgba(0,0,0,.88)),
+        radial-gradient(circle at 30% 10%, rgba(255,255,255,.18), transparent 28%);
+      pointer-events:none;
+    }
+
+    .card-content{
+      position:absolute;
+      inset:auto 0 0 0;
+      z-index:2;
+      padding:22px;
+      transform:translateY(12px);
+      transition:transform .35s ease;
+    }
+
+    .anime-card:hover .card-content{transform:translateY(0)}
+
+    .rate{
+      position:absolute;
+      top:18px;
+      right:18px;
+      z-index:3;
+      padding:8px 11px;
+      border-radius:999px;
+      background:rgba(0,0,0,.36);
+      border:1px solid rgba(255,255,255,.16);
+      backdrop-filter:blur(10px);
+      font-weight:900;
+      color:var(--yellow);
+    }
+
+    .like{
+      position:absolute;
+      top:18px;
+      left:18px;
+      z-index:3;
+      width:42px;
+      height:42px;
+      border:0;
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      border-radius:50%;
+      color:white;
+      background:rgba(255,255,255,.12);
+      backdrop-filter:blur(12px);
+      transition:.25s;
+    }
+
+    .like:hover,
+    .like.active{
+      background:rgba(255,60,172,.78);
+      transform:scale(1.08);
+    }
+
+    .card-content h3{
+      margin:0 0 8px;
+      font-size:1.55rem;
+    }
+
+    .card-content p{
+      margin:0;
+      color:#d8d7ef;
+      line-height:1.8;
+      font-size:.94rem;
+    }
+
+    .meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:14px;
+    }
+
+    .meta span{
+      padding:6px 9px;
+      border-radius:999px;
+      color:#ecfbff;
+      font-size:.78rem;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.12);
+    }
+
+    .scroll-movie{
+      height:330vh;
+      padding:0;
+    }
+
+    .scene-sticky{
+      position:sticky;
+      top:86px;
+      min-height:calc(100svh - 100px);
+      display:grid;
+      align-items:center;
+      padding:40px 0;
+    }
+
+    .scene-panel{
+      display:grid;
+      grid-template-columns:.95fr 1.05fr;
+      gap:28px;
+      align-items:center;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:38px;
+      padding:24px;
+      background:linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.035));
+      backdrop-filter:blur(18px);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .scene-visual{
+      position:relative;
+      min-height:560px;
+      border-radius:30px;
+      overflow:hidden;
+      background:#0b0b18;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.13);
+    }
+
+    .scene-visual::before{
+      content:"";
+      position:absolute;
+      inset:-40%;
+      background:conic-gradient(from calc(var(--scene-progress,0) * 360deg), var(--pink), var(--cyan), var(--yellow), var(--pink));
+      filter:blur(45px);
+      opacity:.35;
+      animation:spin 12s linear infinite;
+    }
+
+    .scene-img{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      opacity:0;
+      transform:scale(1.08);
+      transition:opacity .55s ease, transform 1.2s cubic-bezier(.2,.8,.2,1);
+      filter:saturate(1.25) contrast(1.08);
+    }
+
+    .scene-img.active{
+      opacity:1;
+      transform:scale(1.01);
+    }
+
+    .scene-overlay{
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(180deg, transparent 38%, rgba(0,0,0,.78)),
+        radial-gradient(circle at 70% 20%, rgba(0,245,255,.19), transparent 25%);
+    }
+
+    .chapter-badge{
+      position:absolute;
+      right:20px;
+      top:20px;
+      z-index:2;
+      padding:9px 13px;
+      border-radius:999px;
+      background:rgba(0,0,0,.38);
+      border:1px solid rgba(255,255,255,.16);
+      backdrop-filter:blur(10px);
+      font-weight:900;
+    }
+
+    .scene-bars{
+      position:absolute;
+      right:20px;
+      left:20px;
+      bottom:20px;
+      z-index:3;
+      display:grid;
+      gap:10px;
+    }
+
+    .scene-bar{
+      height:7px;
+      border-radius:999px;
+      background:rgba(255,255,255,.15);
+      overflow:hidden;
+    }
+
+    .scene-bar span{
+      display:block;
+      height:100%;
+      width:0;
+      border-radius:inherit;
+      background:linear-gradient(90deg,var(--cyan),var(--pink));
+      box-shadow:0 0 20px rgba(0,245,255,.4);
+      transition:width .25s ease;
+    }
+
+    .scene-copy{
+      position:relative;
+      min-height:440px;
+      padding:16px;
+    }
+
+    .scene-step{
+      position:absolute;
+      inset:50% 16px auto;
+      transform:translateY(-38%) translateX(-18px);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .45s ease, transform .45s ease;
+    }
+
+    .scene-step.active{
+      opacity:1;
+      transform:translateY(-50%) translateX(0);
+      pointer-events:auto;
+    }
+
+    .scene-step .num{
+      display:inline-grid;
+      place-items:center;
+      width:58px;
+      height:58px;
+      border-radius:22px;
+      font-weight:900;
+      color:#05050d;
+      background:linear-gradient(135deg,var(--yellow),var(--cyan));
+      box-shadow:0 0 45px rgba(0,245,255,.23);
+      margin-bottom:20px;
+    }
+
+    .scene-step h2{
+      margin-bottom:16px;
+    }
+
+    .scene-step p{
+      color:var(--muted);
+      line-height:2;
+      max-width:540px;
+    }
+
+    .characters{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0,1fr));
+      gap:16px;
+    }
+
+    .char-card{
+      position:relative;
+      overflow:hidden;
+      padding:22px;
+      border-radius:30px;
+      border:1px solid rgba(255,255,255,.13);
+      background:rgba(255,255,255,.06);
+      backdrop-filter:blur(16px);
+      transition:transform .3s ease, border-color .3s ease, background .3s ease;
+    }
+
+    .char-card::before{
+      content:"";
+      position:absolute;
+      inset:auto -20% -38% -20%;
+      height:130px;
+      background:radial-gradient(circle, rgba(255,60,172,.35), transparent 62%);
+      transition:.3s;
+    }
+
+    .char-card:hover{
+      transform:translateY(-10px);
+      border-color:rgba(255,60,172,.35);
+      background:rgba(255,255,255,.09);
+    }
+
+    .char-card:hover::before{transform:scale(1.25)}
+
+    .avatar{
+      width:132px;
+      height:132px;
+      border-radius:32px;
+      margin-inline:auto;
+      padding:8px;
+      background:linear-gradient(135deg, rgba(255,60,172,.38), rgba(0,245,255,.22));
+      box-shadow:0 22px 60px rgba(0,0,0,.24);
+    }
+
+    .avatar img{
+      width:100%;
+      height:100%;
+      border-radius:25px;
+      background:rgba(255,255,255,.9);
+    }
+
+    .char-card h3{
+      text-align:center;
+      margin:18px 0 6px;
+      font-size:1.25rem;
+    }
+
+    .char-card p{
+      text-align:center;
+      color:var(--muted);
+      line-height:1.8;
+      margin:0;
+      font-size:.92rem;
+    }
+
+    .power{
+      margin-top:17px;
+      height:8px;
+      border-radius:999px;
+      background:rgba(255,255,255,.12);
+      overflow:hidden;
+    }
+
+    .power span{
+      display:block;
+      height:100%;
+      width:var(--w);
+      border-radius:inherit;
+      background:linear-gradient(90deg,var(--pink),var(--cyan));
+    }
+
+    .timeline{
+      position:relative;
+      display:grid;
+      gap:18px;
+      max-width:920px;
+      margin-inline:auto;
+    }
+
+    .timeline::before{
+      content:"";
+      position:absolute;
+      top:0;
+      bottom:0;
+      right:26px;
+      width:2px;
+      background:linear-gradient(var(--pink),var(--cyan),transparent);
+      opacity:.55;
+    }
+
+    .time-item{
+      position:relative;
+      padding:22px 72px 22px 22px;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:26px;
+      background:rgba(255,255,255,.06);
+      backdrop-filter:blur(14px);
+    }
+
+    .time-item::before{
+      content:"";
+      position:absolute;
+      right:15px;
+      top:30px;
+      width:24px;
+      height:24px;
+      border-radius:50%;
+      background:linear-gradient(135deg,var(--pink),var(--cyan));
+      box-shadow:0 0 28px rgba(0,245,255,.35);
+    }
+
+    .time-item h3{
+      margin:0 0 8px;
+    }
+
+    .time-item p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.9;
+    }
+
+    .cta{
+      text-align:center;
+      padding:85px 22px;
+      border-radius:42px;
+      border:1px solid rgba(255,255,255,.14);
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,60,172,.18), transparent 34%),
+        radial-gradient(circle at 80% 30%, rgba(0,245,255,.15), transparent 32%),
+        rgba(255,255,255,.055);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .cta h2{
+      max-width:850px;
+      margin-inline:auto;
+      margin-bottom:16px;
+    }
+
+    .cta p{
+      color:var(--muted);
+      line-height:2;
+      max-width:680px;
+      margin:0 auto 28px;
+    }
+
+    .footer{
+      padding:34px 0 46px;
+      color:var(--muted);
+      text-align:center;
+    }
+
+    .backtop{
+      position:fixed;
+      left:18px;
+      bottom:18px;
+      z-index:700;
+      width:48px;
+      height:48px;
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:18px;
+      background:rgba(255,255,255,.09);
+      color:white;
+      backdrop-filter:blur(14px);
+      cursor:pointer;
+      opacity:0;
+      transform:translateY(14px);
+      transition:.25s;
+    }
+
+    .backtop.show{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    .reveal{
+      opacity:0;
+      transform:translateY(28px);
+      transition:opacity .7s ease, transform .7s cubic-bezier(.2,.8,.2,1);
+    }
+
+    .reveal.in-view{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    .delay-1{transition-delay:.08s}
+    .delay-2{transition-delay:.16s}
+    .delay-3{transition-delay:.24s}
+
+    @media (max-width: 980px){
+      .nav{display:none}
+      .hero-grid{grid-template-columns:1fr}
+      .hero-art{min-height:540px}
+      .genre-grid,.characters{grid-template-columns:repeat(2, minmax(0,1fr))}
+      .showcase-grid{grid-template-columns:repeat(2, minmax(0,1fr))}
+      .scene-panel{grid-template-columns:1fr}
+      .scene-copy{min-height:340px}
+    }
+
+    @media (max-width: 720px){
+      .topbar{top:10px;border-radius:24px}
+      .brand span:last-child{display:none}
+      .hero{padding-top:112px}
+      h1{letter-spacing:-2px}
+      .mini-stats{grid-template-columns:1fr}
+      .hero-art{min-height:430px}
+      .moon{width:105px;height:105px}
+      .poster{height:320px;border-radius:24px}
+      .poster.p3{height:280px}
+      .energy{width:110px;height:110px;font-size:3rem}
+      .section{padding:76px 0}
+      .section-head{display:block}
+      .section-head p{margin-top:14px}
+      .genre-grid,.characters,.showcase-grid{grid-template-columns:1fr}
+      .anime-card{height:390px}
+      .scroll-movie{height:auto;padding:76px 0}
+      .scene-sticky{position:relative;top:0;padding:0}
+      .scene-panel{padding:14px;border-radius:28px}
+      .scene-visual{min-height:430px}
+      .scene-copy{padding:4px;min-height:auto}
+      .scene-step{
+        position:relative;
+        inset:auto;
+        opacity:1;
+        transform:none;
+        padding:22px 6px;
+        pointer-events:auto;
+      }
+      .scene-step.active{transform:none}
+      .scene-step:not(.active){display:none}
+      .timeline::before{right:20px}
+      .time-item{padding-right:62px}
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *,*::before,*::after{
+        animation-duration:.001ms !important;
+        animation-iteration-count:1 !important;
+        scroll-behavior:auto !important;
+        transition-duration:.001ms !important;
+      }
+      #fxCanvas{display:none}
+      .cursor,.cursor-dot{display:none}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="loader" id="loader" aria-hidden="true">
+    <div class="loader-core"></div>
+  </div>
+
+  <div class="progress" aria-hidden="true"><div class="bar" id="progressBar"></div></div>
+  <canvas id="fxCanvas" aria-hidden="true"></canvas>
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+
+  <header class="topbar">
+    <a href="#home" class="brand" aria-label="Neon Otaku">
+      <span class="brand-logo">⛩️</span>
+      <span>Neon Otaku</span>
+    </a>
+
+    <nav class="nav" aria-label="منوی اصلی">
+      <a href="#home" class="active">شروع</a>
+      <a href="#genres">ژانرها</a>
+      <a href="#showcase">ویترین</a>
+      <a href="#journey">سفر</a>
+      <a href="#characters">کاراکترها</a>
+    </nav>
+
+    <button class="nav-cta magnetic" type="button" onclick="document.querySelector('#showcase').scrollIntoView({behavior:'smooth'})">
+      شروع ماجرا
+    </button>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="kicker reveal"><i class="pulse"></i> پرتال نئونی دنیای انیمه</span>
+          <h1 class="reveal delay-1">
+            وارد <span class="grad-text">جهان انیمه</span><br>
+            شو؛ جایی که هر فریم جادوست
+          </h1>
+          <p class="reveal delay-2">
+            یک تجربه تک‌صفحه‌ای پر از نور، حرکت، کارت‌های سه‌بعدی، فیلتر تعاملی، اسکرول سینمایی و افکت‌های بهینه؛ طراحی شده برای طرفدارهای جدی انیمه.
+          </p>
+
+          <div class="hero-actions reveal delay-3">
+            <a class="btn btn-primary magnetic" href="#showcase">دیدن ویترین آثار</a>
+            <a class="btn magnetic" href="#journey">اسکرول تعاملی</a>
+          </div>
+
+          <div class="mini-stats reveal delay-3">
+            <div class="stat">
+              <strong data-count="128" data-suffix="+">0</strong>
+              <span>انرژی اوتاکویی</span>
+            </div>
+            <div class="stat">
+              <strong data-count="24" data-suffix="/7">0</strong>
+              <span>حال‌وهوای نئونی</span>
+            </div>
+            <div class="stat">
+              <strong data-count="9000" data-suffix="+">0</strong>
+              <span>قدرت شونن</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-art reveal delay-2" aria-hidden="true">
+          <div class="moon"></div>
+
+          <div class="deck" id="deck">
+            <article class="poster p1">
+              <img fetchpriority="high" src="https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=720&q=78" alt="">
+              <small>Cyber Tokyo</small>
+              <b>نبرد زیر نور نئون</b>
+            </article>
+
+            <article class="poster p2">
+              <img src="https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=720&q=78" alt="" loading="lazy" decoding="async">
+              <small>Night Arc</small>
+              <b>شهر بیدار</b>
+            </article>
+
+            <article class="poster p3">
+              <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=720&q=78" alt="" loading="lazy" decoding="async">
+              <small>Sakura Soul</small>
+              <b>روح ساکورا</b>
+            </article>
+          </div>
+
+          <div class="energy">⚡</div>
+        </div>
+      </div>
+
+      <div class="scroll-cue">
+        <div class="mouse"></div>
+        <span>اسکرول کن</span>
+      </div>
+    </section>
+
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>🔥 Shonen Energy</span>
+        <span>🌸 Sakura Dreams</span>
+        <span>⚔️ Epic Battles</span>
+        <span>👁️ Visual Storytelling</span>
+        <span>🚄 Tokyo Nights</span>
+        <span>💫 Anime Vibes</span>
+        <span>🔥 Shonen Energy</span>
+        <span>🌸 Sakura Dreams</span>
+        <span>⚔️ Epic Battles</span>
+        <span>👁️ Visual Storytelling</span>
+        <span>🚄 Tokyo Nights</span>
+        <span>💫 Anime Vibes</span>
+      </div>
+    </div>
+
+    <section class="section" id="genres">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <span class="eyebrow">GENRES</span>
+            <h2>ژانرها، هر کدام با یک حس متفاوت</h2>
+          </div>
+          <p>
+            از نبردهای انفجاری تا روایت‌های آرام و عمیق؛ دنیای انیمه برای هر مود و هر سلیقه یک مسیر تازه دارد.
+          </p>
+        </div>
+
+        <div class="genre-grid">
+          <article class="glass-card tilt reveal">
+            <div class="genre-icon">⚔️</div>
+            <h3>شونن</h3>
+            <p>دوستی، تمرین، شکست، بازگشت و یک ضربه نهایی که کل فصل را می‌ترکاند.</p>
+            <div class="tag-row"><span class="tag">اکشن</span><span class="tag">رشد</span><span class="tag">هیجان</span></div>
+          </article>
+
+          <article class="glass-card tilt reveal delay-1">
+            <div class="genre-icon">🧠</div>
+            <h3>ساینن</h3>
+            <p>داستان‌های بالغ‌تر، شخصیت‌های خاکستری و تصمیم‌هایی که بعد از تیتراژ هم در ذهن می‌مانند.</p>
+            <div class="tag-row"><span class="tag">روانشناختی</span><span class="tag">تاریک</span></div>
+          </article>
+
+          <article class="glass-card tilt reveal delay-2">
+            <div class="genre-icon">🌸</div>
+            <h3>اسلایس آو لایف</h3>
+            <p>زیبایی لحظه‌های ساده؛ یک فنجان چای، یک غروب و مکالمه‌ای که قلب را گرم می‌کند.</p>
+            <div class="tag-row"><span class="tag">آرام</span><span class="tag">احساسی</span></div>
+          </article>
+
+          <article class="glass-card tilt reveal delay-3">
+            <div class="genre-icon">🐉</div>
+            <h3>فانتزی</h3>
+            <p>دنیاهای تازه، قدرت‌های عجیب، گیلدها، هیولاها و سفرهایی که پایانشان افسانه می‌شود.</p>
+            <div class="tag-row"><span class="tag">جادو</span><span class="tag">ماجراجویی</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="showcase">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <span class="eyebrow">SHOWCASE</span>
+            <h2>ویترین الهام‌گرفته از جهان انیمه</h2>
+          </div>
+          <p>
+          فیلتر کن، هاور کن و کارت‌ها را لمس کن
+          </p>
+        </div>
+
+        <div class="filters reveal">
+          <button class="filter-btn active" type="button" data-filter="all">همه</button>
+          <button class="filter-btn" type="button" data-filter="action">اکشن</button>
+          <button class="filter-btn" type="button" data-filter="drama">درام</button>
+          <button class="filter-btn" type="button" data-filter="fantasy">فانتزی</button>
+          <button class="filter-btn" type="button" data-filter="city">نئون شهری</button>
+        </div>
+
+        <div class="showcase-grid">
+          <article class="anime-card tilt reveal" data-cat="city">
+            <img src="https://images.unsplash.com/photo-1513407030348-c983a97b98d8?auto=format&fit=crop&w=900&q=78" alt="شهر نئونی ژاپن" loading="lazy" decoding="async">
+            <span class="rate">★ 9.4</span>
+            <button class="like" type="button" aria-label="پسندیدن">♡</button>
+            <div class="card-content">
+              <h3>Tokyo Neon Arc</h3>
+              <p>نبردی در کوچه‌های روشن، میان باران و تابلوهای نئونی شهر.</p>
+              <div class="meta"><span>Cyber</span><span>City</span><span>Night</span></div>
+            </div>
+          </article>
+
+          <article class="anime-card tilt reveal delay-1" data-cat="drama">
+            <img src="https://images.unsplash.com/photo-1522383225653-ed111181a951?auto=format&fit=crop&w=900&q=78" alt="شکوفه‌های ساکورا" loading="lazy" decoding="async">
+            <span class="rate">★ 8.9</span>
+            <button class="like" type="button" aria-label="پسندیدن">♡</button>
+            <div class="card-content">
+              <h3>Sakura Promise</h3>
+              <p>قولی زیر شکوفه‌های گیلاس؛ آرام، احساسی و ماندگار.</p>
+              <div class="meta"><span>Romance</span><span>Drama</span></div>
+            </div>
+          </article>
+
+          <article class="anime-card tilt reveal delay-2" data-cat="fantasy">
+            <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=900&q=78" alt="معبد ژاپنی" loading="lazy" decoding="async">
+            <span class="rate">★ 9.1</span>
+            <button class="like" type="button" aria-label="پسندیدن">♡</button>
+            <div class="card-content">
+              <h3>Shrine of Spirits</h3>
+              <p>دروازه‌ای میان انسان‌ها و ارواح؛ جایی که افسانه بیدار می‌شود.</p>
+              <div class="meta"><span>Magic</span><span>Spirit</span></div>
+            </div>
+          </article>
+
+          <article class="anime-card tilt reveal" data-cat="action">
+            <img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=900&q=78" alt="فضای الهام گرفته از انیمه" loading="lazy" decoding="async">
+            <span class="rate">★ 8.7</span>
+            <button class="like" type="button" aria-label="پسندیدن">♡</button>
+            <div class="card-content">
+              <h3>Figure Fighters</h3>
+              <p>قهرمانانی کوچک با انرژی بزرگ؛ آماده برای مبارزه نهایی.</p>
+              <div class="meta"><span>Action</span><span>Collectible</span></div>
+            </div>
+          </article>
+
+          <article class="anime-card tilt reveal delay-1" data-cat="city">
+            <img src="https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=900&q=78" alt="خیابان‌های توکیو" loading="lazy" decoding="async">
+            <span class="rate">★ 9.0</span>
+            <button class="like" type="button" aria-label="پسندیدن">♡</button>
+            <div class="card-content">
+              <h3>Midnight Station</h3>
+              <p>قطاری نیمه‌شب، مقصدی ناشناخته و موسیقی Lo-Fi در پس‌زمینه.</p>
+              <div class="meta"><span>Urban</span><span>Lo-Fi</span></div>
+            </div>
+          </article>
+
+          <article class="anime-card tilt reveal delay-2" data-cat="fantasy">
+            <img src="https://images.unsplash.com/photo-1526481280693-3bfa7568e0f3?auto=format&fit=crop&w=900&q=78" alt="طبیعت ژاپن" loading="lazy" decoding="async">
+            <span class="rate">★ 8.8</span>
+            <button class="like" type="button" aria-label="پسندیدن">♡</button>
+            <div class="card-content">
+              <h3>Forest Guardian</h3>
+              <p>نگهبان جنگل، سکوت کوهستان و نیرویی که از دل طبیعت می‌آید.</p>
+              <div class="meta"><span>Nature</span><span>Fantasy</span></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="scroll-movie" id="journey">
+      <div class="container scene-sticky">
+        <div class="scene-panel reveal">
+          <div class="scene-visual tilt">
+            <img class="scene-img active" src="https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=950&q=78" alt="" loading="lazy" decoding="async">
+            <img class="scene-img" src="https://images.unsplash.com/photo-1522383225653-ed111181a951?auto=format&fit=crop&w=950&q=78" alt="" loading="lazy" decoding="async">
+            <img class="scene-img" src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=950&q=78" alt="" loading="lazy" decoding="async">
+            <div class="scene-overlay"></div>
+            <div class="chapter-badge" id="chapterBadge">Episode 01</div>
+
+            <div class="scene-bars" aria-hidden="true">
+              <div class="scene-bar"><span></span></div>
+              <div class="scene-bar"><span></span></div>
+              <div class="scene-bar"><span></span></div>
+            </div>
+          </div>
+
+          <div class="scene-copy">
+            <article class="scene-step active">
+              <span class="num">01</span>
+              <h2>شروع در شهر نئونی</h2>
+              <p>
+                قهرمان داستان، میان نورهای توکیو و صدای باران، اولین نشانه قدرتش را پیدا می‌کند. با اسکرول کردن، صحنه تغییر می‌کند.
+              </p>
+            </article>
+
+            <article class="scene-step">
+              <span class="num">02</span>
+              <h2>آرامش قبل از طوفان</h2>
+              <p>
+                ساکوراها می‌ریزند، موسیقی آرام می‌شود و روایت برای یک چرخش بزرگ آماده است؛ همان لحظه‌ای که انیمه‌ها استاد ساختنش هستند.
+              </p>
+            </article>
+
+            <article class="scene-step">
+              <span class="num">03</span>
+              <h2>دروازه افسانه</h2>
+              <p>
+                پرده آخر باز می‌شود؛ معبد، نور، رازهای قدیمی و تصمیمی که مسیر فصل بعد را تعیین می‌کند.
+              </p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="characters">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <span class="eyebrow">CHARACTERS</span>
+            <h2>تیم کاراکترهای اصلی</h2>
+          </div>
+          <p>
+            آواتارها به صورت SVG از CDN/API ساخته شده‌اند تا سبک تصویرسازی، سبک و سریع باقی بماند.
+          </p>
+        </div>
+
+        <div class="characters">
+          <article class="char-card reveal tilt">
+            <div class="avatar">
+              <img src="https://api.dicebear.com/9.x/adventurer/svg?seed=Akira&backgroundColor=b6e3f4,c0aede,ffdfbf&radius=30" alt="Akira" loading="lazy" decoding="async">
+            </div>
+            <h3>Akira</h3>
+            <p>شمشیرزن سریع با قلبی آرام و تصمیم‌هایی آتشین.</p>
+            <div class="power"><span style="--w:92%"></span></div>
+          </article>
+
+          <article class="char-card reveal delay-1 tilt">
+            <div class="avatar">
+              <img src="https://api.dicebear.com/9.x/adventurer/svg?seed=Mika&backgroundColor=ffd5dc,d1d4f9,c0aede&radius=30" alt="Mika" loading="lazy" decoding="async">
+            </div>
+            <h3>Mika</h3>
+            <p>جادوگر نور؛ متخصص طلسم‌های دفاعی و لبخندهای نجات‌دهنده.</p>
+            <div class="power"><span style="--w:84%"></span></div>
+          </article>
+
+          <article class="char-card reveal delay-2 tilt">
+            <div class="avatar">
+              <img src="https://api.dicebear.com/9.x/adventurer/svg?seed=Rin&backgroundColor=ffdfbf,b6e3f4,ffd5dc&radius=30" alt="Rin" loading="lazy" decoding="async">
+            </div>
+            <h3>Rin</h3>
+            <p>استراتژیست تیم؛ کسی که قبل از مبارزه، پایانش را دیده است.</p>
+            <div class="power"><span style="--w:88%"></span></div>
+          </article>
+
+          <article class="char-card reveal delay-3 tilt">
+            <div class="avatar">
+              <img src="https://api.dicebear.com/9.x/adventurer/svg?seed=Kuro&backgroundColor=c0aede,b6e3f4,ffdfbf&radius=30" alt="Kuro" loading="lazy" decoding="async">
+            </div>
+            <h3>Kuro</h3>
+            <p>نینجای سایه‌ها؛ کم‌حرف، دقیق و همیشه یک قدم جلوتر.</p>
+            <div class="power"><span style="--w:96%"></span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="timeline">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <span class="eyebrow">EPISODE FLOW</span>
+            <h2>فرمول طلایی یک اپیزود جذاب</h2>
+          </div>
+          <p>
+            این بخش با Intersection Observer ظاهر می‌شود تا هم روان باشد و هم از نظر عملکرد بهینه بماند.
+          </p>
+        </div>
+
+        <div class="timeline">
+          <article class="time-item reveal">
+            <h3>۱. قلاب ابتدایی</h3>
+            <p>یک صحنه کوتاه اما قدرتمند که سوال اصلی اپیزود را در ذهن مخاطب می‌کارد.</p>
+          </article>
+          <article class="time-item reveal delay-1">
+            <h3>۲. معرفی تعارض</h3>
+            <p>قهرمان با مانعی روبه‌رو می‌شود که فقط با زور حل نمی‌شود؛ باید رشد کند.</p>
+          </article>
+          <article class="time-item reveal delay-2">
+            <h3>۳. لحظه شکست</h3>
+            <p>همان جایی که همه‌چیز از دست رفته به نظر می‌رسد و موسیقی عوض می‌شود.</p>
+          </article>
+          <article class="time-item reveal delay-3">
+            <h3>۴. انفجار نهایی</h3>
+            <p>قدرت تازه، تصمیم بزرگ و پایان‌بندی‌ای که مخاطب را به قسمت بعد می‌کشاند.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="cta reveal">
+          <h2>وبسایت انیمه ای و اوتاکویی خودت رو همین امروز بساز </h2>
+          <p>
+           محمد علی اسکاش طراح و سازنده سایت های انیمیشنی ولی بهینه ، مناسب برای تعامل بیشتر کاربران و سئو این دمو را ساخته و توسعه داده است . 
+          </p>
+<a class="btn" style="background:#00fff27a;color:#f7f2f2" href="tel:09032059983">تماس با طراح سایت</a>        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+     MOHAMMAD ALI ESKASH
+    </div>
+  </footer>
+
+  <button class="backtop" id="backtop" type="button" aria-label="بازگشت به بالا">↑</button>
+
+  <script>
+    (() => {
+      const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
+
+      window.addEventListener("load", () => {
+        const loader = document.getElementById("loader");
+        setTimeout(() => {
+          loader.classList.add("hide");
+          loader.addEventListener("transitionend", () => loader.remove(), { once: true });
+        }, 450);
+      });
+
+      const progressBar = document.getElementById("progressBar");
+      const backtop = document.getElementById("backtop");
+      const scene = document.querySelector(".scroll-movie");
+      const sceneImages = [...document.querySelectorAll(".scene-img")];
+      const sceneSteps = [...document.querySelectorAll(".scene-step")];
+      const sceneBars = [...document.querySelectorAll(".scene-bar span")];
+      const chapterBadge = document.getElementById("chapterBadge");
+
+      let sceneTop = 0;
+      let sceneRange = 1;
+
+      function measureScene(){
+        if(!scene) return;
+        const rect = scene.getBoundingClientRect();
+        sceneTop = rect.top + window.scrollY;
+        sceneRange = Math.max(1, scene.offsetHeight - window.innerHeight);
+      }
+
+      function setScene(index, progress){
+        sceneImages.forEach((img, i) => img.classList.toggle("active", i === index));
+        sceneSteps.forEach((step, i) => step.classList.toggle("active", i === index));
+        if(chapterBadge) chapterBadge.textContent = `Episode 0${index + 1}`;
+
+        sceneBars.forEach((bar, i) => {
+          let width = 0;
+          if(i < index) width = 100;
+          if(i === index) width = clamp((progress * 3 - index) * 100, 0, 100);
+          bar.style.width = width + "%";
+        });
+      }
+
+      let ticking = false;
+      function updateScroll(){
+        const doc = document.documentElement;
+        const max = Math.max(1, doc.scrollHeight - window.innerHeight);
+        const percent = window.scrollY / max;
+
+        progressBar.style.transform = `scaleX(${percent})`;
+        document.documentElement.style.setProperty("--scroll", `${percent * 100}%`);
+        backtop.classList.toggle("show", window.scrollY > 760);
+
+        if(scene){
+          const p = clamp((window.scrollY - sceneTop) / sceneRange, 0, 1);
+          scene.style.setProperty("--scene-progress", p.toFixed(3));
+          const index = Math.min(2, Math.floor(p * 3));
+          setScene(index, p);
+        }
+
+        ticking = false;
+      }
+
+      function requestTick(){
+        if(!ticking){
+          requestAnimationFrame(updateScroll);
+          ticking = true;
+        }
+      }
+
+      measureScene();
+      updateScroll();
+
+      window.addEventListener("scroll", requestTick, { passive: true });
+      window.addEventListener("resize", () => {
+        measureScene();
+        requestTick();
+      }, { passive: true });
+
+      backtop.addEventListener("click", () => {
+        window.scrollTo({ top: 0, behavior: prefersReduced ? "auto" : "smooth" });
+      });
+
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if(entry.isIntersecting){
+            entry.target.classList.add("in-view");
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.13, rootMargin: "0px 0px -60px 0px" });
+
+      document.querySelectorAll(".reveal").forEach(el => revealObserver.observe(el));
+
+      const navLinks = [...document.querySelectorAll(".nav a")];
+      const sections = navLinks
+        .map(link => document.querySelector(link.getAttribute("href")))
+        .filter(Boolean);
+
+      const navObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if(entry.isIntersecting){
+            navLinks.forEach(link => {
+              link.classList.toggle("active", link.getAttribute("href") === `#${entry.target.id}`);
+            });
+          }
+        });
+      }, { threshold: 0.42 });
+
+      sections.forEach(sec => navObserver.observe(sec));
+
+      const nf = new Intl.NumberFormat("fa-IR");
+      const countEls = document.querySelectorAll("[data-count]");
+      const countObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if(!entry.isIntersecting) return;
+          const el = entry.target;
+          const target = Number(el.dataset.count);
+          const suffix = el.dataset.suffix || "";
+          const start = performance.now();
+          const duration = 1300;
+
+          function animate(now){
+            const t = clamp((now - start) / duration, 0, 1);
+            const eased = 1 - Math.pow(1 - t, 3);
+            el.textContent = nf.format(Math.floor(target * eased)) + suffix;
+            if(t < 1) requestAnimationFrame(animate);
+          }
+
+          requestAnimationFrame(animate);
+          countObserver.unobserve(el);
+        });
+      }, { threshold: 0.6 });
+
+      countEls.forEach(el => countObserver.observe(el));
+
+      const filterBtns = document.querySelectorAll(".filter-btn");
+      const animeCards = document.querySelectorAll(".anime-card");
+
+      filterBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+          filterBtns.forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          const filter = btn.dataset.filter;
+          animeCards.forEach((card, index) => {
+            const show = filter === "all" || card.dataset.cat === filter;
+            card.classList.toggle("filtered-out", !show);
+            if(show){
+              card.animate([
+                { opacity: 0, transform: "scale(.96) translateY(14px)" },
+                { opacity: 1, transform: "scale(1) translateY(0)" }
+              ], {
+                duration: 380,
+                delay: index * 35,
+                easing: "cubic-bezier(.2,.8,.2,1)"
+              });
+            }
+          });
+        });
+      });
+
+      document.querySelectorAll(".like").forEach(btn => {
+        btn.addEventListener("click", () => {
+          btn.classList.toggle("active");
+          btn.textContent = btn.classList.contains("active") ? "♥" : "♡";
+        });
+      });
+
+      document.querySelectorAll(".btn").forEach(btn => {
+        btn.addEventListener("pointermove", e => {
+          const r = btn.getBoundingClientRect();
+          btn.style.setProperty("--x", `${e.clientX - r.left}px`);
+          btn.style.setProperty("--y", `${e.clientY - r.top}px`);
+        }, { passive:true });
+      });
+
+      const finePointer = window.matchMedia("(pointer: fine)").matches;
+
+      if(finePointer && !prefersReduced){
+        document.body.classList.add("has-cursor");
+
+        const cursor = document.getElementById("cursor");
+        const dot = document.getElementById("cursorDot");
+        let x = window.innerWidth / 2, y = window.innerHeight / 2;
+        let cx = x, cy = y;
+
+        window.addEventListener("pointermove", e => {
+          x = e.clientX;
+          y = e.clientY;
+          dot.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+        }, { passive:true });
+
+        function cursorLoop(){
+          cx += (x - cx) * 0.17;
+          cy += (y - cy) * 0.17;
+          cursor.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%)`;
+          requestAnimationFrame(cursorLoop);
+        }
+        cursorLoop();
+
+        document.querySelectorAll("a, button, .tilt, .anime-card").forEach(el => {
+          el.addEventListener("pointerenter", () => cursor.classList.add("hover"));
+          el.addEventListener("pointerleave", () => cursor.classList.remove("hover"));
+        });
+
+        document.querySelectorAll(".tilt").forEach(card => {
+          card.addEventListener("pointermove", e => {
+            const r = card.getBoundingClientRect();
+            const px = (e.clientX - r.left) / r.width;
+            const py = (e.clientY - r.top) / r.height;
+            const rx = (py - .5) * -8;
+            const ry = (px - .5) * 8;
+            card.style.setProperty("--mx", `${px * 100}%`);
+            card.style.setProperty("--my", `${py * 100}%`);
+            card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-6px)`;
+          }, { passive:true });
+
+          card.addEventListener("pointerleave", () => {
+            card.style.transform = "";
+            card.style.setProperty("--mx", "50%");
+            card.style.setProperty("--my", "0%");
+          });
+        });
+
+        document.querySelectorAll(".magnetic").forEach(el => {
+          el.addEventListener("pointermove", e => {
+            const r = el.getBoundingClientRect();
+            const x = (e.clientX - r.left - r.width / 2) * .16;
+            const y = (e.clientY - r.top - r.height / 2) * .16;
+            el.style.transform = `translate(${x}px, ${y}px)`;
+          }, { passive:true });
+
+          el.addEventListener("pointerleave", () => {
+            el.style.transform = "";
+          });
+        });
+
+        const deck = document.getElementById("deck");
+        window.addEventListener("pointermove", e => {
+          const px = (e.clientX / window.innerWidth - .5) * 12;
+          const py = (e.clientY / window.innerHeight - .5) * -10;
+          if(deck) deck.style.transform = `rotateY(${px}deg) rotateX(${py}deg)`;
+        }, { passive:true });
+      }
+
+      if(!prefersReduced){
+        const canvas = document.getElementById("fxCanvas");
+        const ctx = canvas.getContext("2d", { alpha: true });
+        let dpr = 1;
+        let w = 0;
+        let h = 0;
+        let particles = [];
+        let running = true;
+
+        function resizeCanvas(){
+          dpr = Math.min(window.devicePixelRatio || 1, 2);
+          w = window.innerWidth;
+          h = window.innerHeight;
+          canvas.width = Math.floor(w * dpr);
+          canvas.height = Math.floor(h * dpr);
+          canvas.style.width = w + "px";
+          canvas.style.height = h + "px";
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+          const count = Math.min(72, Math.max(34, Math.floor(w / 22)));
+          particles = Array.from({ length: count }, () => ({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            r: Math.random() * 3 + 1.2,
+            vy: Math.random() * .8 + .25,
+            vx: Math.random() * .55 - .25,
+            rot: Math.random() * Math.PI,
+            vr: Math.random() * .025 + .008,
+            hue: Math.random() > .5 ? 320 : 185,
+            alpha: Math.random() * .48 + .22
+          }));
+        }
+
+        function drawParticle(p){
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rot);
+          ctx.fillStyle = `hsla(${p.hue}, 100%, 72%, ${p.alpha})`;
+          ctx.shadowBlur = 14;
+          ctx.shadowColor = `hsla(${p.hue}, 100%, 60%, .45)`;
+          ctx.beginPath();
+          ctx.ellipse(0, 0, p.r * 1.8, p.r, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+
+        function animateParticles(){
+          if(!running) return;
+          ctx.clearRect(0, 0, w, h);
+
+          for(const p of particles){
+            p.x += p.vx + Math.sin((p.y + window.scrollY) * .006) * .18;
+            p.y += p.vy;
+            p.rot += p.vr;
+
+            if(p.y > h + 20){
+              p.y = -20;
+              p.x = Math.random() * w;
+            }
+            if(p.x < -20) p.x = w + 20;
+            if(p.x > w + 20) p.x = -20;
+
+            drawParticle(p);
+          }
+
+          requestAnimationFrame(animateParticles);
+        }
+
+        resizeCanvas();
+        animateParticles();
+
+        window.addEventListener("resize", resizeCanvas, { passive:true });
+        document.addEventListener("visibilitychange", () => {
+          running = !document.hidden;
+          if(running) animateParticles();
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
